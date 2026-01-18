@@ -543,4 +543,15 @@ input:focus {
     .form-row {
         grid-template-columns: 1fr;
     }
+
+    .hero-headline {
+        font-size: 3rem;
+        /* Reduce from 6rem */
+        word-wrap: break-word;
+        hyphens: auto;
+    }
+
+    .manifesto-text {
+        font-size: 2rem;
+    }
 }
