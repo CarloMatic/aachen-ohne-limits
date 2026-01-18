@@ -446,17 +446,31 @@ h3 {
 
 @media (max-width: 600px) {
     .logo-container {
-        width: 100px;
-        /* 50% of 200px */
-        height: 40px;
-        /* 50% of 80px */
+        width: auto;
+        height: auto;
+        display: flex;
+        align-items: center;
+        /* Vertical center if heights differ */
     }
 
-    .logo-img,
-    .logo-start,
+    /* Start Logo (Compact): Constrain by Height */
+    .logo-start {
+        height: 35px;
+        width: auto;
+    }
+
+    /* End Logo (Wide Text): Constrain by Width */
+    /* "Nicht breiter als..." -> strict width constraint */
     .logo-end {
-        height: 40px;
-        /* 50% of 80px */
+        width: 45vw;
+        height: auto;
+        max-width: 200px;
+        /* Cap it so it doesn't get huge on near-600px screens */
+    }
+
+    /* Reset generic base rule */
+    .logo-img {
+        /* Specific rules above override this */
     }
 
     .header {
