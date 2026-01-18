@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aachen ohne Limits | Place Branding Aachen e.V.</title>
+    <meta name="description"
+        content="Aachen kennt keine Grenzen, bietet vielmehr grenzenlose Möglichkeiten. Die neue Initiative für Aachen.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+
+    <!-- Dynamic Background Logo -->
+    <div class="bg-logo-layer">
+        <!-- Using the AC Mark for the background shape -->
+        <img src="assets/images/ac.svg" alt="" class="bg-logo-img" id="bgLogo">
+    </div>
+
+    <!-- Scroll Progress Line -->
+    <div class="scroll-progress"></div>
+
+    <header class="header">
+        <div class="logo-container">
+            <!-- Initial Logo (fades out) -->
+            <img src="assets/images/header_start.svg" alt="Aachen ohne Limits" class="logo-img logo-start"
+                id="logoStart">
+            <!-- Final Logo (fades in) -->
+            <img src="assets/images/logo.svg" alt="Aachen ohne Limits Logo" class="logo-img logo-end" id="logoEnd">
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section (The Solution / The Hook) -->
+        <section class="hero-section">
+            <!-- Raster image removed as requested -->
+            <div class="hero-content">
+                <h2 class="hero-headline">Zukunft kennt keine <span class="highlight-green">Grenzen</span>.</h2>
+                <div class="scroll-indcator">
+                    <p class="small-caps">Warum Aachen eine starke Standortmarke braucht &darr;</p>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="narrative-section bg-black">
+            <div class="container text-center">
+                <h3 class="narrative-headline"><span class="highlight-green">Aachen hat alles.</span><br>Außer Wasser.
+                </h3>
+                <p class="narrative-text">
+                    Wir haben die Technologie. Die Köpfe. Die Kreativität.<br>
+                    Aber wer weiß das wirklich? <br><br>
+                </p>
+            </div>
+        </section>
+
+        <!-- Place Branding EV Section -->
+        <!-- Place Branding EV Section -->
+        <section class="narrative-section bg-dark" id="section-association">
+            <div class="container text-center">
+                <p class="narrative-text" style="max-width: 800px; margin: 0 auto;">
+                    Im <strong>Place Branding Aachen e.V.</strong> vereinen sich alle, die Aachens Werte und Erfolge in
+                    der Welt bekannt machen wollen.<br><br>
+                    Getrieben und finanziert durch Unternehmen,<br>
+                    unterstützt durch die Öcher und ihre Verwaltung.
+                </p>
+            </div>
+        </section>
+
+        <!-- New Mindset Section -->
+        <section class="narrative-section bg-black">
+            <div class="container text-center">
+                <h3 class="narrative-small-headline highlight-green">Es ist ein neues Mindset.</h3>
+                <p class="narrative-text">
+                    Keine Region hat es besser gelernt Grenzen nicht hinzunehmen sondern zu transformieren.<br>
+                    Mehr Mut groß zu denken. Wir lassen uns von Grenzen nicht aufhalten.
+                </p>
+                <div style="margin-top: 10rem; margin-bottom: 8rem;">
+                    <p class="narrative-text">KI in <span class="highlight-green">Aachen ohne Limits</span></p>
+                    <p class="narrative-text">Gründen in <span class="highlight-green">Aachen ohne Limits</span></p>
+                    <p class="narrative-text">Handwerk in <span class="highlight-green">Aachen ohne Limits</span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Eine Marke die uns allen gehört (Animation Trigger) -->
+        <section class="narrative-section bg-black" id="section-strength">
+            <div class="container text-center">
+                <h3 class="narrative-headline"><span class="highlight-green">Eine Marke</span><br>die uns allen gehört.
+                </h3>
+                <p class="narrative-text">
+                    Im Wettbewerb müssen besonders wir als kleine Region unsere Kräfte bündeln.
+                    Alle Themen kommunizieren wir unter diesem Dach um maximale Wirkung zu erzeugen.
+                </p>
+            </div>
+        </section>
+
+        <!-- Manifesto Section (The Solution) -->
+        <!-- Manifesto Section Removed -->
+
+        <!-- Supporters Section -->
+        <section class="supporters-section">
+            <div class="container">
+                <!-- Moved Intro Logos -->
+                <div class="contact-intro text-center">
+                    <p class="small-caps" style="margin-bottom: 1rem; opacity: 0.7;">Initiiert mit viel Engagement von
+                    </p>
+                    <img src="assets/images/logos.svg" alt="Initiatoren"
+                        style="max-width: 100%; height: auto; margin-bottom: 2rem;">
+
+                    <p class="small-caps" style="margin-bottom: 1rem; opacity: 0.7;">Unterstützt durch</p>
+                    <img src="assets/images/unterstuetzer.svg" alt="Unterstützer"
+                        style="max-width: 100%; height: auto;">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <!-- Headline -->
+            <h3 class="narrative-small-headline text-center">Ich interessiere mich mitzumachen:</h3>
+
+            <form class="contact-form" id="contactForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" placeholder="Vorname" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Nachname" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="Firma">
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Mailadresse" required>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="privacy" required style="width: auto; margin-right: 10px;">
+                    <label for="privacy" style="color: #ccc; font-size: 0.9rem;">Ich stimme der Verarbeitung meiner
+                        Daten zu.</label>
+                </div>
+
+                <div class="form-group text-center">
+                    <button type="submit" class="btn-submit">Absenden</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-left">
+                <p>&copy; 2026 Place Branding Aachen e.V.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">Impressum</a>
+                <a href="#">Datenschutz</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
