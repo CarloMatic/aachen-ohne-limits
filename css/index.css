@@ -450,62 +450,32 @@ animation: drift 10s infinite alternate ease-in-out;
         font-size: 2.5rem;
     }
 
-    .hero-headline {
-        font-size: 3rem;
-        /* Reduce from 6rem */
-    }
-
-    .manifesto-text {
-        font-size: 2rem;
-        /* Reduce from 3.5rem */
-    }
-
-    .narrative-text {
-        font-size: 1.125rem;
-        /* Reduce from 1.5rem (-25%) */
-    }
-
     .split-layout {
         grid-template-columns: 1fr;
+    }
+
+    .shape-barrier {
+        height: 200px;
     }
 }
 
 @media (max-width: 600px) {
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .footer-links a {
-        margin: 0 1rem;
-    }
-
-    /* Mobile Header Logo Sizing */
     .logo-container {
-        width: 140px;
-        height: 50px;
+        width: 100px;
+        /* 50% of 200px */
+        height: 40px;
+        /* 50% of 80px */
     }
 
     .logo-img {
-        height: 50px;
+        height: 40px;
+        /* 50% of 80px */
     }
 
     .header {
         top: 1.5rem;
         left: 1.5rem;
     }
-
-    /* Reduce Background Logo size on mobile */
-    .bg-logo-img,
-    #static-logo {
-        width: 45vw;
-        /* Smaller on mobile (was 60vw) */
-    }
-}
-
-.shape-barrier {
-    height: 200px;
-}
 }
 
 /* Supporters Section (Restored) */
