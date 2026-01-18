@@ -321,20 +321,7 @@ h3 {
     }
 }
 
-position: absolute;
-top: -20%;
-right: -10%;
-width: 60vw;
-height: 60vw;
-background: var(--color-green);
-border-radius: 50% 0 50% 50%;
-/* Abstract shape */
-filter: blur(80px);
-/* Glow effect */
-opacity: 0.15;
-z-index: 1;
-animation: drift 10s infinite alternate ease-in-out;
-}
+
 
 @keyframes drift {
     from {
