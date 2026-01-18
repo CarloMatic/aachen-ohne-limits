@@ -203,8 +203,6 @@ h3 {
 .logo-start {
     opacity: 1;
     z-index: 2;
-    height: 14px;
-    /* 30% smaller than 20px */
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
@@ -454,7 +452,9 @@ h3 {
         /* 50% of 80px */
     }
 
-    .logo-img {
+    .logo-img,
+    .logo-start,
+    .logo-end {
         height: 40px;
         /* 50% of 80px */
     }
