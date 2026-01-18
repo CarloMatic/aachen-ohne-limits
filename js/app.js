@@ -139,9 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
         bgLogoFull.style.transform = transformString;
         bgLogoFull.style.opacity = fullLogoOpacity;
 
-        // NEW: Mobile Header Visibility Toggle
-        // Hide header logo when scrolling through 'section-strength' on Mobile
-        if (isMobile) {
+        // NEW: Mobile/Tablet Header Visibility Toggle
+        // Hide header logo when scrolling through 'section-strength' on Mobile/Tablet
+        if (window.innerWidth <= 1024) {
             const mindsetSection = document.getElementById('section-mindset'); // Start hiding here
             const supportersSection = document.querySelector('.supporters-section'); // Stop hiding after this
             const header = document.querySelector('.header');
