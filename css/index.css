@@ -460,6 +460,11 @@ animation: drift 10s infinite alternate ease-in-out;
         /* Reduce from 3.5rem */
     }
 
+    .narrative-text {
+        font-size: 1.125rem;
+        /* Reduce from 1.5rem (-25%) */
+    }
+
     .split-layout {
         grid-template-columns: 1fr;
     }
