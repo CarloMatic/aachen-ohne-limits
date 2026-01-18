@@ -39,7 +39,8 @@ body.light-mode label {
     color: var(--color-black);
 }
 
-body.light-mode .contact-intro img {
+body.light-mode .contact-intro img,
+body.light-mode .header img {
     filter: brightness(0);
     /* Turn logos black */
     transition: filter 0.5s ease;
@@ -449,13 +450,50 @@ animation: drift 10s infinite alternate ease-in-out;
         font-size: 2.5rem;
     }
 
+    .hero-headline {
+        font-size: 3rem;
+        /* Reduce from 6rem */
+    }
+
+    .manifesto-text {
+        font-size: 2rem;
+        /* Reduce from 3.5rem */
+    }
+
     .split-layout {
         grid-template-columns: 1fr;
     }
+}
 
-    .shape-barrier {
-        height: 200px;
+@media (max-width: 600px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
     }
+
+    .footer-links a {
+        margin: 0 1rem;
+    }
+
+    /* Mobile Header Logo Sizing */
+    .logo-container {
+        width: 140px;
+        height: 50px;
+    }
+
+    .logo-img {
+        height: 50px;
+    }
+
+    .header {
+        top: 1.5rem;
+        left: 1.5rem;
+    }
+}
+
+.shape-barrier {
+    height: 200px;
+}
 }
 
 /* Supporters Section (Restored) */
