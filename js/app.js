@@ -131,13 +131,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Apply
-        const transformString = `translate(${moveX}%, ${moveY}px) rotate(0deg) scale(${scale})`;
+        // We need distinct transforms for the Background Mark (bgLogo) and the Full Logo (bgLogoFull)
+        // because the 'Mark' is only a small part (~30%) of the 'Full Logo'.
 
-        bgLogo.style.transform = transformString;
-        bgLogo.style.opacity = logoOpacity;
+        // RATIOS calculated from SVG viewBoxes:
+        // Full Logo Width: 414 | Mark Width: 126 => Ratio: 0.3043
+        // Shift X: Mark Center (63) vs Logo Center (207) => -144 units relative to 414 => -34.78%
+        // Shift Y: Mark Center (~53) vs Logo Center (61) => -8 units relative to 122 => Small correction ~ -1.1vw
 
-        bgLogoFull.style.transform = transformString;
+        const AC_SCALE_RATIO = 0.3043;
+        const AC_OFFSET_X_PERCENT = -34.78;
+
+        // Convert VW offset to px for Y
+        const vwInPx = window.innerWidth / 100;
+        // -1.1vw rough estimate of vertical shift
+        const AC_OFFSET_Y_PX = -1.1 * vwInPx;
+
+        // 1. Transform for FULL LOGO (The anchor)
+        // It follows the standard calculated path (Scale 1, Center -50%)
+        const transformFull = `translate(${moveX}%, ${moveY}px) rotate(0deg) scale(${scale})`;
+        bgLogoFull.style.transform = transformFull;
         bgLogoFull.style.opacity = fullLogoOpacity;
+
+        // 2. Transform for AC MARK (The morphing element)
+        // It needs to interpolate from its Big State (Hero) to the 'Mark Position' inside the Full Logo.
+
+        // We explicitly calculate its own scale/move based on progress to ensure smooth transition
+        let acScale, acMoveX, acMoveY;
+
+        if (scrolled < animationEndPoint) {
+            // STILL ANIMATING
+            // We want it to START similar to before (Scale 8, X -110)
+            // But END at the corrective target (Scale 1*Ratio, X -50+Offset)
+
+            const progress = Math.max(0, Math.min(scrolled / animationEndPoint, 1));
+            const eased = 1 - Math.pow(1 - progress, 3);
+
+            // Interpolate Scale: 8 -> (1 * 0.3043)
+            const targetScale = MIN_SCALE * AC_SCALE_RATIO;
+            acScale = HERO_SCALE - ((HERO_SCALE - targetScale) * eased);
+
+            // Interpolate X: -110 -> (-50 + -34.78)
+            const targetX = END_X + AC_OFFSET_X_PERCENT;
+            acMoveX = START_X + ((targetX - START_X) * eased);
+
+            // Interpolate Y: 0 -> (OFFSET_Y + AC_OFFSET_Y_PX)
+            const targetY = OFFSET_Y + AC_OFFSET_Y_PX;
+            acMoveY = targetY * eased;
+
+        } else {
+            // LOCKED
+            acScale = MIN_SCALE * AC_SCALE_RATIO;
+            acMoveX = END_X + AC_OFFSET_X_PERCENT;
+            acMoveY = currentTrackingY + AC_OFFSET_Y_PX;
+        }
+
+        const transformAC = `translate(${acMoveX}%, ${acMoveY}px) rotate(0deg) scale(${acScale})`;
+        bgLogo.style.transform = transformAC;
+        bgLogo.style.opacity = logoOpacity;
 
         // NEW: Mobile/Tablet Header Visibility Toggle
         // Hide header logo when scrolling through 'section-strength' on Mobile/Tablet
