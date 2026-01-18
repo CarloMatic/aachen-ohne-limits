@@ -165,6 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     header.style.pointerEvents = 'auto';
                 }
             }
+        } else {
+            // Desktop: Always ensure header is visible
+            const header = document.querySelector('.header');
+            if (header) {
+                header.style.opacity = '1';
+                header.style.pointerEvents = 'auto';
+            }
         }
     }
 
