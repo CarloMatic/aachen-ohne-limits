@@ -47,7 +47,14 @@ body.light-mode .contact-intro img,
 body.light-mode .header img {
     filter: brightness(0);
     /* Turn logos black */
+    filter: brightness(0);
+    /* Turn logos black */
     transition: filter 0.5s ease;
+}
+
+/* Force footer text to stay white even in light mode */
+body.light-mode .footer p {
+    color: var(--color-white);
 }
 
 /* ... existing styles ... */
