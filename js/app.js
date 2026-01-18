@@ -142,17 +142,30 @@ document.addEventListener('DOMContentLoaded', () => {
         // NEW: Mobile Header Visibility Toggle
         // Hide header logo when scrolling through 'section-strength' on Mobile
         if (isMobile) {
+            const mindsetSection = document.getElementById('section-mindset'); // KI module is here
             const strengthSection = document.getElementById('section-strength');
             const header = document.querySelector('.header');
-            if (strengthSection && header) {
+
+            if (mindsetSection && strengthSection && header) {
+                const mindsetRect = mindsetSection.getBoundingClientRect();
                 const strengthRect = strengthSection.getBoundingClientRect();
-                // If section is roughly in view (top < viewportHeight and bottom > 0)
-                // Actually user said "during the module", so when it dominates the screen.
-                // Let's say when top < 50% viewport and bottom > 50% viewport?
-                // Or simply when it is intersecting significantly.
-                // Simpler: When the TOP of the section passes the top of the viewport
-                // until the BOTTOM of the section passes the top.
-                if (strengthRect.top < 100 && strengthRect.bottom > 100) {
+
+                // Define the "Hide Zone"
+                // Start: When Mindset section enters the top half of viewport (or earlier)
+                // End: When Strength section leaves significantly
+
+                // Logic: 
+                // IF we are below the top of Mindset 
+                // AND we are above the bottom of Strength
+
+                // Let's us specific scroll triggers for accuracy
+                // Top boundary: Mindset top < 200px (it's scrolling up)
+                // Bottom boundary: Strength bottom > 100px (it hasn't fully scrolled away)
+
+                const enteredZone = mindsetRect.top < 300;
+                const exitedZone = strengthRect.bottom < 100;
+
+                if (enteredZone && !exitedZone) {
                     header.style.opacity = '0';
                     header.style.pointerEvents = 'none';
                 } else {
