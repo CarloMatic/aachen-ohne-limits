@@ -39,7 +39,8 @@ body.light-mode label {
     color: var(--color-black);
 }
 
-body.light-mode .contact-intro img {
+body.light-mode .contact-intro img,
+body.light-mode .header img {
     filter: brightness(0);
     /* Turn logos black */
     transition: filter 0.5s ease;
