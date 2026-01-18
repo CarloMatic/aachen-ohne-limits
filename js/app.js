@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (animationEndPoint < viewportHeight) animationEndPoint = viewportHeight;
 
         // Crossfade Zone
-        // Fade starts when Mindset is roughly in view/centered
         const fadeStartPoint = mindsetTop - (viewportHeight * 0.5);
         const fadeEndPoint = animationEndPoint;
 
@@ -59,11 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
         let moveX = START_X;
 
         // Vertical Centering Calculation
-        // Since we are using absolute positioning (top: 50%), 
-        // a Y-translation of -50% of viewport height centers the element.
-        // We use pixels for Y to easily add standard scrolling later.
-        const centerYPx = -(viewportHeight * 0.5);
-        let moveY = centerYPx; // Default to centered
+        // User said "remains too high".
+        // Previous was `-(viewportHeight * 0.5)` which puts center at TOP 0.
+        // We want center to be CENTER of screen. 
+        // With `top: 50%`, `translateY: 0` is vertically centered.
+        // So centerYPx should be 0.
+        const centerYPx = 0;
+
+        let moveY = centerYPx;
 
         // -- MOTION & SCROLLING --
 
@@ -94,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const scrolledPast = scrolled - animationEndPoint;
 
             // Add scroll offset to the centered position
+            // Since centerYPx is 0, we simply subtract scrolling.
             moveY = centerYPx - scrolledPast;
         }
 
@@ -125,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Apply Transforms to BOTH
         // moveX is %, moveY is px
+        // Note: translateY uses the PIXEL value now to keep it absolute
         const transformString = `translate(${moveX}%, ${moveY}px) rotate(0deg) scale(${scale})`;
 
         bgLogo.style.transform = transformString;

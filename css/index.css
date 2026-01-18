@@ -179,7 +179,8 @@ h3 {
     position: fixed;
     top: 2rem;
     left: 2rem;
-    z-index: 100;
+    z-index: 1;
+    /* Lower than content (z-index: 2) */
 }
 
 .logo-container {
