@@ -143,19 +143,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // Hide header logo when scrolling through 'section-strength' on Mobile
         if (isMobile) {
             const mindsetSection = document.getElementById('section-mindset'); // Start hiding here
-            const contactSection = document.querySelector('.contact-section'); // Stop hiding here
+            const supportersSection = document.querySelector('.supporters-section'); // Stop hiding after this
             const header = document.querySelector('.header');
 
-            if (mindsetSection && contactSection && header) {
+            if (mindsetSection && supportersSection && header) {
                 const mindsetRect = mindsetSection.getBoundingClientRect();
-                const contactRect = contactSection.getBoundingClientRect();
+                const supportersRect = supportersSection.getBoundingClientRect();
 
                 // Define the "Hide Zone"
                 // Start: Mindset section enters tracking area (< 300px)
-                // End: Contact section enters the viewport (top < viewportHeight)
+                // End: Supporters section has scrolled UP out of view (bottom < 100px)
 
                 const enteredZone = mindsetRect.top < 300;
-                const exitedZone = contactRect.top < (viewportHeight * 0.8); // Reappear slightly before or as it hits
+                const exitedZone = supportersRect.bottom < 100; // Only reappear when logos are gone
 
                 if (enteredZone && !exitedZone) {
                     header.style.opacity = '0';
