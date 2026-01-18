@@ -374,8 +374,7 @@ h3 {
 }
 
 .narrative-text {
-    font-size: 1.2rem;
-    /* Reduced by 20% from 1.5rem */
+    font-size: 1.5rem;
     line-height: 1.6;
     color: #ccc;
     font-weight: 300;
@@ -554,5 +553,10 @@ input:focus {
 
     .manifesto-text {
         font-size: 2rem;
+    }
+
+    .narrative-text {
+        font-size: 1.2rem;
+        /* Reduced by 20% ONLY on mobile */
     }
 }
