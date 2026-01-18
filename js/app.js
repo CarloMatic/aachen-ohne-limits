@@ -142,28 +142,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // NEW: Mobile Header Visibility Toggle
         // Hide header logo when scrolling through 'section-strength' on Mobile
         if (isMobile) {
-            const mindsetSection = document.getElementById('section-mindset'); // KI module is here
-            const strengthSection = document.getElementById('section-strength');
+            const mindsetSection = document.getElementById('section-mindset'); // Start hiding here
+            const contactSection = document.querySelector('.contact-section'); // Stop hiding here
             const header = document.querySelector('.header');
 
-            if (mindsetSection && strengthSection && header) {
+            if (mindsetSection && contactSection && header) {
                 const mindsetRect = mindsetSection.getBoundingClientRect();
-                const strengthRect = strengthSection.getBoundingClientRect();
+                const contactRect = contactSection.getBoundingClientRect();
 
                 // Define the "Hide Zone"
-                // Start: When Mindset section enters the top half of viewport (or earlier)
-                // End: When Strength section leaves significantly
-
-                // Logic: 
-                // IF we are below the top of Mindset 
-                // AND we are above the bottom of Strength
-
-                // Let's us specific scroll triggers for accuracy
-                // Top boundary: Mindset top < 200px (it's scrolling up)
-                // Bottom boundary: Strength bottom > 100px (it hasn't fully scrolled away)
+                // Start: Mindset section enters tracking area (< 300px)
+                // End: Contact section enters the viewport (top < viewportHeight)
 
                 const enteredZone = mindsetRect.top < 300;
-                const exitedZone = strengthRect.bottom < 100;
+                const exitedZone = contactRect.top < (viewportHeight * 0.8); // Reappear slightly before or as it hits
 
                 if (enteredZone && !exitedZone) {
                     header.style.opacity = '0';
