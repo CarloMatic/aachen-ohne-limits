@@ -138,6 +138,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         bgLogoFull.style.transform = transformString;
         bgLogoFull.style.opacity = fullLogoOpacity;
+
+        // NEW: Mobile Header Visibility Toggle
+        // Hide header logo when scrolling through 'section-strength' on Mobile
+        if (isMobile) {
+            const strengthSection = document.getElementById('section-strength');
+            const header = document.querySelector('.header');
+            if (strengthSection && header) {
+                const strengthRect = strengthSection.getBoundingClientRect();
+                // If section is roughly in view (top < viewportHeight and bottom > 0)
+                // Actually user said "during the module", so when it dominates the screen.
+                // Let's say when top < 50% viewport and bottom > 50% viewport?
+                // Or simply when it is intersecting significantly.
+                // Simpler: When the TOP of the section passes the top of the viewport
+                // until the BOTTOM of the section passes the top.
+                if (strengthRect.top < 100 && strengthRect.bottom > 100) {
+                    header.style.opacity = '0';
+                    header.style.pointerEvents = 'none';
+                } else {
+                    header.style.opacity = '1';
+                    header.style.pointerEvents = 'auto';
+                }
+            }
+        }
     }
 
     // Load handling
