@@ -186,6 +186,7 @@ h3 {
     left: 2rem;
     z-index: 1;
     /* Allow scrolling text to cover it */
+    transition: opacity 0.5s ease;
 }
 
 .logo-container {
