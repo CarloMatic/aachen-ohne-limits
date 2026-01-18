@@ -296,8 +296,7 @@ h3 {
 }
 
 .footer p {
-    color: #888;
-    /* Uniform gray */
+    color: var(--color-white);
     font-size: 0.9rem;
 }
 
