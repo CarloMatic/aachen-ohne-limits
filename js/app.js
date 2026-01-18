@@ -14,21 +14,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Config values
     const HERO_SCALE = 8;     // Start at 800%
-    const MIN_SCALE = 1;      // Final scale
+    const MIN_SCALE = 1;      // Final scale matching 60vw
     const START_X = -110;     // Start further left
     const END_X = -50;        // Center
-    const OFFSET_Y = -80;     // Lift logo 80px up
 
     function updateLogoState() {
         if (!bgLogo || !bgLogoFull || !staticLogo) return;
 
         const scrolled = window.scrollY;
         const viewportHeight = window.innerHeight;
+        const isMobile = window.innerWidth < 768;
+
+        // Responsive Offset
+        // Desktop: Lift significantly (-180px) to clear headline
+        // Mobile: Lift less (-60px) to keep it tight
+        const OFFSET_Y = isMobile ? -60 : -180;
 
         // --- CORE CALCULATIONS for CONTINUITY ---
 
         // 1. Where is the Anchor physically located on the full page document?
-        // We use getBoundingClientRect + scrollY to get absolute doc top.
         const staticRect = staticLogo.getBoundingClientRect();
         const staticAbsoluteTop = staticRect.top + scrolled;
         const staticHeight = staticRect.height;
@@ -42,9 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 3. Define the Lock Point (Animation End Point)
         // This is the SCROLL POSITION where 'staticCenterY' equals 'viewportCenterY'.
-        // i.e. when staticRect.top + h/2 = vh/2
-        // => (staticAbsoluteTop - scroll) + h/2 = vh/2
-        // => staticAbsoluteTop + h/2 - vh/2 = scroll
         const lockScrollPos = staticAbsoluteTop + (staticHeight / 2) - (viewportCenterY);
 
         // Ensure we don't lock before the page even allows (e.g. if it's at top)
@@ -58,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const mindsetTop = mindsetSection ? mindsetSection.offsetTop : viewportHeight;
 
         // Start fading earlier? 
-        // Let's fade from Mindset enter -> Lock Point
         const fadeStartPoint = mindsetTop - (viewportHeight * 0.5);
         const fadeEndPoint = animationEndPoint;
 
@@ -82,6 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (scrolled < animationEndPoint) {
             // PHASE 1: ZOOM IN
             let progress = scrolled / animationEndPoint;
+            // progress = Math.max(0, Math.min(progress, 1));
+            // Let's allow it to slightly overshoot if needed for continuity?
+            // Actually, for the interpolation math to match tracking Y exactly at the handoff, 
+            // we need exact 0-1 range relative to lock point.
             progress = Math.max(0, Math.min(progress, 1));
 
             const eased = 1 - Math.pow(1 - progress, 3); // Cubic Out
@@ -137,12 +141,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Load handling
-    // We need to wait for layout to be stable to get correct static logo top.
     window.addEventListener('load', updateLogoState);
     window.addEventListener('scroll', updateLogoState);
     window.addEventListener('resize', updateLogoState);
 
-    // Initial call just in case (DOMContentLoaded)
+    // Initial call
     updateLogoState();
 
     // IntersectionObserver
