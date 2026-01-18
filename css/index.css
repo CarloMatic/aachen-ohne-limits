@@ -180,8 +180,8 @@ h3 {
     position: fixed;
     top: 2rem;
     left: 2rem;
-    z-index: 100;
-    /* Ensure it stays above all content */
+    z-index: 1;
+    /* Allow scrolling text to cover it */
 }
 
 .logo-container {
@@ -474,8 +474,8 @@ h3 {
 /* Contact Section */
 .contact-section {
     padding: 5rem 0;
-    background-color: #FFFFFF;
-    /* White background */
+    background-color: transparent;
+    /* Rely on body.light-mode for white bg */
     color: #000000;
     /* Black text */
     position: relative;
