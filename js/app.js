@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bgLogo = document.getElementById('bgLogo');
     const bgLogoFull = document.getElementById('bgLogoFull');
 
-    // The Content Anchor (Invisible, but reserves space & position)
+    // The Content Anchor (Invisible placeholder)
     const staticLogo = document.getElementById('static-logo');
 
     // Header Logos
@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Config values
     const HERO_SCALE = 8;     // Start at 800%
-    const MIN_SCALE = 1;      // Final scale matching 60vw
+    const MIN_SCALE = 1;      // Final scale
     const START_X = -110;     // Start further left
-    const END_X = -50;        // Center: left:50% + translate(-50%)
-    const OFFSET_Y = -80;    // Manual Lift (Visual correction "too low")
+    const END_X = -50;        // Center
+    const OFFSET_Y = -80;     // Lift logo 80px up
 
     function updateLogoState() {
         if (!bgLogo || !bgLogoFull || !staticLogo) return;
@@ -25,45 +25,49 @@ document.addEventListener('DOMContentLoaded', () => {
         const scrolled = window.scrollY;
         const viewportHeight = window.innerHeight;
 
-        // --- CALCULATE ANCHOR POSITION ---
+        // --- CORE CALCULATIONS for CONTINUITY ---
+
+        // 1. Where is the Anchor physically located on the full page document?
+        // We use getBoundingClientRect + scrollY to get absolute doc top.
         const staticRect = staticLogo.getBoundingClientRect();
-        const staticCenterY = staticRect.top + (staticRect.height / 2);
+        const staticAbsoluteTop = staticRect.top + scrolled;
+        const staticHeight = staticRect.height;
+
+        // 2. Where is it currently relative to the viewport center?
+        const staticCenterY = staticRect.top + (staticHeight / 2);
         const viewportCenterY = viewportHeight / 2;
 
-        // How far is the static logo from the center of the screen?
-        // We add OFFSET_Y to lift it visually higher than the actual anchor
-        const deltaY = (staticCenterY - viewportCenterY) + OFFSET_Y;
+        // Phase 2 Target Y: The anchor's distance from center + our manual lift
+        const currentTrackingY = (staticCenterY - viewportCenterY) + OFFSET_Y;
 
-        // --- TRIGGER POINTS ---
+        // 3. Define the Lock Point (Animation End Point)
+        // This is the SCROLL POSITION where 'staticCenterY' equals 'viewportCenterY'.
+        // i.e. when staticRect.top + h/2 = vh/2
+        // => (staticAbsoluteTop - scroll) + h/2 = vh/2
+        // => staticAbsoluteTop + h/2 - vh/2 = scroll
+        const lockScrollPos = staticAbsoluteTop + (staticHeight / 2) - (viewportCenterY);
 
-        // Lock Point: When the logo visually arrives at the center
-        // This calculation predicts the scroll position where deltaY would be 0 (or OFFSET_Y)
-        // But since we track deltaY continuously in Phase 2, we just need a smooth handoff.
-        // Handoff happens when Phase 1 (Zoom) completes.
-        // Let's define the endpoint based on the section position.
-
-        const strengthSection = document.getElementById('section-strength');
-        // Standard lock point: Section Top - 50% Viewport
-        // Adjusted slightly for the lift
-        const strengthTop = strengthSection ? strengthSection.offsetTop : (viewportHeight * 2);
-
-        let animationEndPoint = strengthTop - (viewportHeight * 0.5) + OFFSET_Y;
+        // Ensure we don't lock before the page even allows (e.g. if it's at top)
+        let animationEndPoint = lockScrollPos;
         if (animationEndPoint < viewportHeight) animationEndPoint = viewportHeight;
 
+        // --- OTHER TRIGGERS ---
 
-        // Crossfade Config
+        // Crossfade
         const mindsetSection = document.getElementById('section-mindset');
         const mindsetTop = mindsetSection ? mindsetSection.offsetTop : viewportHeight;
 
+        // Start fading earlier? 
+        // Let's fade from Mindset enter -> Lock Point
         const fadeStartPoint = mindsetTop - (viewportHeight * 0.5);
         const fadeEndPoint = animationEndPoint;
 
-        // Light Mode Config
+        // Light Mode
         const contactSection = document.querySelector('.contact-section');
         const contactTop = contactSection ? contactSection.offsetTop : 99999;
         const breakPointLightMode = contactTop - (viewportHeight * 0.8);
 
-        // --- LOGIC ---
+        // --- APPLY LOGIC ---
 
         if (scrolled >= breakPointLightMode) {
             document.body.classList.add('light-mode');
@@ -75,41 +79,34 @@ document.addEventListener('DOMContentLoaded', () => {
         let moveX = START_X;
         let moveY = 0;
 
-        // Determine Phase
         if (scrolled < animationEndPoint) {
-            // PHASE 1: Zoom In 
+            // PHASE 1: ZOOM IN
             let progress = scrolled / animationEndPoint;
             progress = Math.max(0, Math.min(progress, 1));
 
-            const eased = 1 - Math.pow(1 - progress, 3);
+            const eased = 1 - Math.pow(1 - progress, 3); // Cubic Out
 
             scale = HERO_SCALE - ((HERO_SCALE - MIN_SCALE) * eased);
-
-            // Move X: Left -> Center (END_X = -50)
             moveX = START_X + ((END_X - START_X) * eased);
 
-            // Move Y: Interpolate to the Handoff Point
-            // At 0% progress: 0 (Centered)
-            // At 100% progress: It must match 'deltaY' at that moment.
-            // But deltaY changes with scroll.
-            // Simplified: Keep it 0 (Fixed Center) until the lock point?
-            // "remains too high" -> imply it shouldn't be fixed 0? 
-            // Actually, if we keep it 0, it stays centered.
-            // The user wants it to END up higher.
-            // So we can interpolate Y from 0 to OFFSET_Y?
-            // Let's try keeping it 0 + a slight drift to OFFSET_Y
+            // Y INTERPOLATION
+            // Start: 0 (Visual Center)
+            // End: OFFSET_Y
+            // Mathematically: At progress=1 (scrolled=lockScrollPos), 
+            // currentTrackingY = (0) + OFFSET_Y = OFFSET_Y.
+            // So if we interpolate to OFFSET_Y, the handoff is seamless.
             moveY = OFFSET_Y * eased;
 
         } else {
-            // PHASE 2: LOCKED TO CONTENT
+            // PHASE 2: LOCKED TRACKING
             scale = MIN_SCALE;
-            moveX = END_X; // -50% Corrects the Center
+            moveX = END_X;
 
-            // Track the anchor exactly
-            moveY = deltaY;
+            // Directly follow the anchor
+            moveY = currentTrackingY;
         }
 
-        // --- CROSSFADE LOGIC ---
+        // --- CROSSFADE ---
         let logoOpacity = 1;
         let fullLogoOpacity = 0;
 
@@ -119,9 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             logoOpacity = 1 - fadeProgress;
             fullLogoOpacity = fadeProgress;
-        } else {
-            logoOpacity = 1;
-            fullLogoOpacity = 0;
         }
 
         // Header Sync
@@ -142,9 +136,13 @@ document.addEventListener('DOMContentLoaded', () => {
         bgLogoFull.style.opacity = fullLogoOpacity;
     }
 
-    // Run on Scroll
+    // Load handling
+    // We need to wait for layout to be stable to get correct static logo top.
+    window.addEventListener('load', updateLogoState);
     window.addEventListener('scroll', updateLogoState);
     window.addEventListener('resize', updateLogoState);
+
+    // Initial call just in case (DOMContentLoaded)
     updateLogoState();
 
     // IntersectionObserver
