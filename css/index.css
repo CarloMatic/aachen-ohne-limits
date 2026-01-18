@@ -136,12 +136,17 @@ input:focus {
 }
 
 .bg-logo-img {
+    position: absolute;
+    /* Stack on top of each other */
+    top: 50%;
+    left: 50%;
     width: 60vw;
     /* Reset to base size */
     opacity: 1;
     /* FULL VISIBILITY to avoid 'dark' look */
     transform-origin: center center;
-    transform: translate(-60%, 0%) rotate(0deg) scale(8);
+    transform: translate(-50%, -50%) rotate(0deg) scale(8);
+    /* Initial state overridden by JS */
 }
 
 .container {
