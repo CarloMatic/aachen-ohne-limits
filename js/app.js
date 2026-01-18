@@ -190,39 +190,41 @@ document.addEventListener('DOMContentLoaded', () => {
         bgLogo.style.transform = transformAC;
         bgLogo.style.opacity = logoOpacity;
 
-        // NEW: Mobile/Tablet Header Visibility Toggle
-        // Hide header logo when scrolling through 'section-strength' on Mobile/Tablet
-        if (window.innerWidth <= 1024) {
-            const mindsetSection = document.getElementById('section-mindset'); // Start hiding here
-            const supportersSection = document.querySelector('.supporters-section'); // Stop hiding after this
-            const header = document.querySelector('.header');
+        // Final Header Visibility Logic
+        // 1. Mobile/Tablet: Hide during Mindset -> Supporters
+        // 2. GLOBAL: Hide in White Area (Light Mode) - requested by user to be empty
+        // 3. Elsevier: Visible
 
-            if (mindsetSection && supportersSection && header) {
+        let headerVisible = true;
+
+        if (window.innerWidth <= 1024) {
+            // Mobile Zone Logic
+            const mindsetSection = document.getElementById('section-mindset');
+            const supportersSection = document.querySelector('.supporters-section');
+
+            if (mindsetSection && supportersSection) {
                 const mindsetRect = mindsetSection.getBoundingClientRect();
                 const supportersRect = supportersSection.getBoundingClientRect();
 
-                // Define the "Hide Zone"
-                // Start: Mindset section enters tracking area (< 300px)
-                // End: Supporters section has scrolled UP out of view (bottom < 100px)
-
                 const enteredZone = mindsetRect.top < 300;
-                const exitedZone = supportersRect.bottom < 100; // Only reappear when logos are gone
+                const exitedZone = supportersRect.bottom < 100;
 
                 if (enteredZone && !exitedZone) {
-                    header.style.opacity = '0';
-                    header.style.pointerEvents = 'none';
-                } else {
-                    header.style.opacity = '1';
-                    header.style.pointerEvents = 'auto';
+                    headerVisible = false;
                 }
             }
-        } else {
-            // Desktop: Always ensure header is visible
-            const header = document.querySelector('.header');
-            if (header) {
-                header.style.opacity = '1';
-                header.style.pointerEvents = 'auto';
-            }
+        }
+
+        // Global Override for White Area (using the calculated breakpoint or class)
+        if (scrolled >= breakPointLightMode) {
+            headerVisible = false;
+        }
+
+        // Apply to Header
+        const header = document.querySelector('.header');
+        if (header) {
+            header.style.opacity = headerVisible ? '1' : '0';
+            header.style.pointerEvents = headerVisible ? 'auto' : 'none';
         }
     }
 
