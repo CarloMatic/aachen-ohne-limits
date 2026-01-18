@@ -16,6 +16,10 @@
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     background-color: var(--color-black);
     color: var(--color-white);
@@ -215,7 +219,8 @@ h3 {
 
 /* Hero Section */
 .hero-section {
-    height: 100vh;
+    height: 100svh;
+    /* Use svh for better mobile viewport handling */
     display: flex;
     align-items: center;
     justify-content: center;
