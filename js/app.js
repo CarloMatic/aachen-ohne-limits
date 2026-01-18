@@ -14,11 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Config values
     const HERO_SCALE = 8;     // Start at 800%
-    const MIN_SCALE = 1;      // Final scale matches the static logo scale? 
-    // Actually, the static logo is width: 60vw. 
-    // The bg-logo-img also has width: 60vw.
-    // So MIN_SCALE should be 1 to match perfectly.
+    const MIN_SCALE = 1;      // Final scale matching 60vw
     const START_X = -110;     // Start further left
+    const END_X = -50;        // Center: left:50% + translate(-50%)
+    const OFFSET_Y = -80;    // Manual Lift (Visual correction "too low")
 
     function updateLogoState() {
         if (!bgLogo || !bgLogoFull || !staticLogo) return;
@@ -27,28 +26,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const viewportHeight = window.innerHeight;
 
         // --- CALCULATE ANCHOR POSITION ---
-        // We want to lock when the static logo is roughly centered?
-        // Or simply: calculate where the Static Logo IS right now relative to viewport center.
-        // And move the Fixed Logo to match it.
-
         const staticRect = staticLogo.getBoundingClientRect();
         const staticCenterY = staticRect.top + (staticRect.height / 2);
         const viewportCenterY = viewportHeight / 2;
 
-        // The difference: how far is the static logo from the center of the screen?
-        const deltaY = staticCenterY - viewportCenterY;
+        // How far is the static logo from the center of the screen?
+        // We add OFFSET_Y to lift it visually higher than the actual anchor
+        const deltaY = (staticCenterY - viewportCenterY) + OFFSET_Y;
 
         // --- TRIGGER POINTS ---
 
-        // "Lock Point" is when the static logo arrives at the center of the screen.
-        // We can pre-calculate the scroll position for this.
-        const staticOffsetTop = staticLogo.getBoundingClientRect().top + window.scrollY; // Absolute doc position
-        const lockScrollPos = staticOffsetTop + (staticRect.height / 2) - (viewportHeight / 2);
+        // Lock Point: When the logo visually arrives at the center
+        // This calculation predicts the scroll position where deltaY would be 0 (or OFFSET_Y)
+        // But since we track deltaY continuously in Phase 2, we just need a smooth handoff.
+        // Handoff happens when Phase 1 (Zoom) completes.
+        // Let's define the endpoint based on the section position.
 
-        let animationEndPoint = lockScrollPos;
+        const strengthSection = document.getElementById('section-strength');
+        // Standard lock point: Section Top - 50% Viewport
+        // Adjusted slightly for the lift
+        const strengthTop = strengthSection ? strengthSection.offsetTop : (viewportHeight * 2);
+
+        let animationEndPoint = strengthTop - (viewportHeight * 0.5) + OFFSET_Y;
+        if (animationEndPoint < viewportHeight) animationEndPoint = viewportHeight;
+
 
         // Crossfade Config
-        // Fade from Mindset -> Lock Point
         const mindsetSection = document.getElementById('section-mindset');
         const mindsetTop = mindsetSection ? mindsetSection.offsetTop : viewportHeight;
 
@@ -74,42 +77,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Determine Phase
         if (scrolled < animationEndPoint) {
-            // PHASE 1: Zoom In TOWARDS the Anchor
+            // PHASE 1: Zoom In 
             let progress = scrolled / animationEndPoint;
-            // progress = Math.max(0, Math.min(progress, 1));
-            // Let's allow it to slightly overshoot if needed, or stick to clamp?
-            // Clamp for safety.
             progress = Math.max(0, Math.min(progress, 1));
 
-            // Cubic Easing for natural swoop
             const eased = 1 - Math.pow(1 - progress, 3);
 
             scale = HERO_SCALE - ((HERO_SCALE - MIN_SCALE) * eased);
 
-            // Move X: Left -> Center (0)
-            // Note: Our CSS centers it. So target X is 0 (relative to center).
-            // But wait, START_X is -110%. Target is 0%.
-            moveX = START_X + ((0 - START_X) * eased);
+            // Move X: Left -> Center (END_X = -50)
+            moveX = START_X + ((END_X - START_X) * eased);
 
-            // Move Y:
-            // We want it to LAND at 'deltaY' (which would be 0 at animationEndPoint).
-            // But initially we want it centered (0).
-            // So interpolate from 0 to deltaY? 
-            // Actually, if we want it to look "Fixed" until the lock, keep Y=0.
-            // USER REQUEST: "gleiche Scrollanimation wie das AC Logo".
-            // AC Logo was fixed centered.
-            moveY = 0;
-
-            // BUT: At the exact end of this phase, moveY MUST equal the anchor's deltaY (which is 0).
-            // So moveY = 0 works perfectly for the handoff.
+            // Move Y: Interpolate to the Handoff Point
+            // At 0% progress: 0 (Centered)
+            // At 100% progress: It must match 'deltaY' at that moment.
+            // But deltaY changes with scroll.
+            // Simplified: Keep it 0 (Fixed Center) until the lock point?
+            // "remains too high" -> imply it shouldn't be fixed 0? 
+            // Actually, if we keep it 0, it stays centered.
+            // The user wants it to END up higher.
+            // So we can interpolate Y from 0 to OFFSET_Y?
+            // Let's try keeping it 0 + a slight drift to OFFSET_Y
+            moveY = OFFSET_Y * eased;
 
         } else {
             // PHASE 2: LOCKED TO CONTENT
-            // We strictly follow the Static Anchor's position.
             scale = MIN_SCALE;
-            moveX = 0; // Centered horizontally
+            moveX = END_X; // -50% Corrects the Center
 
-            // Match the vertical offset of the anchor
+            // Track the anchor exactly
             moveY = deltaY;
         }
 
@@ -127,19 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
             logoOpacity = 1;
             fullLogoOpacity = 0;
         }
-
-        // Hide Fixed Logos if scrolled VERY far past? 
-        // Or if the content covers them? 
-        // User wants them "above".
-        // They are z-index 1. Content is z-index 2.
-        // Actually, if we track the anchor, the fixed layer sits BEHIND the content text?
-        // We might need to ensure the Fixed Layer is z-index compatible.
-        // The user said: "and stands ABOVE it [the content? or above the headline?]".
-        // "sodass dieser darüber scrollt" -> "so that it [the text?] scrolls over it [the logo]?"
-        // "hinter den Text" (Previous prompt) -> Logo behind Text.
-        // "darüber steht" (This prompt) -> Stands above? 
-        // "darüber scrollt" usually means "scrolls over".
-        // Let's assume standard behavior: Logo is background, Text is foreground.
 
         // Header Sync
         if (logoStart && logoEnd) {
@@ -161,10 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Run on Scroll
     window.addEventListener('scroll', updateLogoState);
-    window.addEventListener('resize', updateLogoState); // Handle resize
+    window.addEventListener('resize', updateLogoState);
     updateLogoState();
 
-    // IntersectionObserver (Existing)
+    // IntersectionObserver
     const observerOptions = { threshold: 0.1 };
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
