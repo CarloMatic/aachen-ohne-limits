@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Aachen ohne Limits - Loaded');
 
-    // Dynamic Background Logo Animation
+    // Fixed Background Layers
     const bgLogo = document.getElementById('bgLogo');
     const bgLogoFull = document.getElementById('bgLogoFull');
+
+    // The Content Anchor (Invisible, but reserves space & position)
+    const staticLogo = document.getElementById('static-logo');
 
     // Header Logos
     const logoStart = document.getElementById('logoStart');
@@ -11,43 +14,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Config values
     const HERO_SCALE = 8;     // Start at 800%
-    const MIN_SCALE = 1;      // Final scale
-    const END_X = -50;        // Centered (since left is 50%)
-    const START_X = -110;     // Start further left (-60% delta)
+    const MIN_SCALE = 1;      // Final scale matches the static logo scale? 
+    // Actually, the static logo is width: 60vw. 
+    // The bg-logo-img also has width: 60vw.
+    // So MIN_SCALE should be 1 to match perfectly.
+    const START_X = -110;     // Start further left
 
     function updateLogoState() {
-        if (!bgLogo || !bgLogoFull) return;
+        if (!bgLogo || !bgLogoFull || !staticLogo) return;
 
         const scrolled = window.scrollY;
         const viewportHeight = window.innerHeight;
 
+        // --- CALCULATE ANCHOR POSITION ---
+        // We want to lock when the static logo is roughly centered?
+        // Or simply: calculate where the Static Logo IS right now relative to viewport center.
+        // And move the Fixed Logo to match it.
+
+        const staticRect = staticLogo.getBoundingClientRect();
+        const staticCenterY = staticRect.top + (staticRect.height / 2);
+        const viewportCenterY = viewportHeight / 2;
+
+        // The difference: how far is the static logo from the center of the screen?
+        const deltaY = staticCenterY - viewportCenterY;
+
         // --- TRIGGER POINTS ---
 
-        // 1. Crossfade START: "Es ist ein neues Mindset" section
+        // "Lock Point" is when the static logo arrives at the center of the screen.
+        // We can pre-calculate the scroll position for this.
+        const staticOffsetTop = staticLogo.getBoundingClientRect().top + window.scrollY; // Absolute doc position
+        const lockScrollPos = staticOffsetTop + (staticRect.height / 2) - (viewportHeight / 2);
+
+        let animationEndPoint = lockScrollPos;
+
+        // Crossfade Config
+        // Fade from Mindset -> Lock Point
         const mindsetSection = document.getElementById('section-mindset');
         const mindsetTop = mindsetSection ? mindsetSection.offsetTop : viewportHeight;
 
-        // 2. Crossfade END / Lock Point: "Eine Marke" section
-        const strengthSection = document.getElementById('section-strength');
-        // This is also the main animation end point where it locks and starts parallel scroll
-        const strengthTop = strengthSection ? (strengthSection.offsetTop) : (viewportHeight * 2);
-
-        // Lock point: Section Top - 50% Viewport (Logo centered behind section)
-        let animationEndPoint = strengthTop - (viewportHeight * 0.5);
-        if (animationEndPoint < viewportHeight) animationEndPoint = viewportHeight;
-
-        // Crossfade Zone
         const fadeStartPoint = mindsetTop - (viewportHeight * 0.5);
         const fadeEndPoint = animationEndPoint;
 
-        // 3. Light Mode Trigger
+        // Light Mode Config
         const contactSection = document.querySelector('.contact-section');
         const contactTop = contactSection ? contactSection.offsetTop : 99999;
         const breakPointLightMode = contactTop - (viewportHeight * 0.8);
 
         // --- LOGIC ---
 
-        // Toggle Light Mode
         if (scrolled >= breakPointLightMode) {
             document.body.classList.add('light-mode');
         } else {
@@ -56,55 +70,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let scale = HERO_SCALE;
         let moveX = START_X;
+        let moveY = 0;
 
-        // Vertical Centering Calculation
-        // User said "remains too high".
-        // Previous was `-(viewportHeight * 0.5)` which puts center at TOP 0.
-        // We want center to be CENTER of screen. 
-        // With `top: 50%`, `translateY: 0` is vertically centered.
-        // So centerYPx should be 0.
-        const centerYPx = 0;
-
-        let moveY = centerYPx;
-
-        // -- MOTION & SCROLLING --
-
+        // Determine Phase
         if (scrolled < animationEndPoint) {
-            // PHASE 1: Zoom In to Lock
+            // PHASE 1: Zoom In TOWARDS the Anchor
             let progress = scrolled / animationEndPoint;
+            // progress = Math.max(0, Math.min(progress, 1));
+            // Let's allow it to slightly overshoot if needed, or stick to clamp?
+            // Clamp for safety.
             progress = Math.max(0, Math.min(progress, 1));
 
-            // Cubic Easing
+            // Cubic Easing for natural swoop
             const eased = 1 - Math.pow(1 - progress, 3);
 
             scale = HERO_SCALE - ((HERO_SCALE - MIN_SCALE) * eased);
 
-            // X Animation: Left -> Center (-50)
-            moveX = START_X + ((END_X - START_X) * eased);
+            // Move X: Left -> Center (0)
+            // Note: Our CSS centers it. So target X is 0 (relative to center).
+            // But wait, START_X is -110%. Target is 0%.
+            moveX = START_X + ((0 - START_X) * eased);
 
-            // Y Animation: Stays at centerYPx (Fixed Visual Center)
+            // Move Y:
+            // We want it to LAND at 'deltaY' (which would be 0 at animationEndPoint).
+            // But initially we want it centered (0).
+            // So interpolate from 0 to deltaY? 
+            // Actually, if we want it to look "Fixed" until the lock, keep Y=0.
+            // USER REQUEST: "gleiche Scrollanimation wie das AC Logo".
+            // AC Logo was fixed centered.
+            moveY = 0;
+
+            // BUT: At the exact end of this phase, moveY MUST equal the anchor's deltaY (which is 0).
+            // So moveY = 0 works perfectly for the handoff.
 
         } else {
-            // PHASE 2: Parallel Scroll
+            // PHASE 2: LOCKED TO CONTENT
+            // We strictly follow the Static Anchor's position.
             scale = MIN_SCALE;
+            moveX = 0; // Centered horizontally
 
-            // X Stays Centered
-            moveX = END_X;
-
-            // Y Moves UP with Scroll
-            // Calculate pixels scrolled past the lock point
-            const scrolledPast = scrolled - animationEndPoint;
-
-            // Add scroll offset to the centered position
-            // Since centerYPx is 0, we simply subtract scrolling.
-            moveY = centerYPx - scrolledPast;
+            // Match the vertical offset of the anchor
+            moveY = deltaY;
         }
 
-        // -- CROSSFADE LOGIC --
-        // Fade from AC (bgLogo) -> Full (bgLogoFull)
-
-        let logoOpacity = 1;      // AC Mark
-        let fullLogoOpacity = 0;  // Full Logo
+        // --- CROSSFADE LOGIC ---
+        let logoOpacity = 1;
+        let fullLogoOpacity = 0;
 
         if (scrolled >= fadeStartPoint) {
             let fadeProgress = (scrolled - fadeStartPoint) / (fadeEndPoint - fadeStartPoint);
@@ -113,12 +124,24 @@ document.addEventListener('DOMContentLoaded', () => {
             logoOpacity = 1 - fadeProgress;
             fullLogoOpacity = fadeProgress;
         } else {
-            // Before the start point
             logoOpacity = 1;
             fullLogoOpacity = 0;
         }
 
-        // Header Logo Sync
+        // Hide Fixed Logos if scrolled VERY far past? 
+        // Or if the content covers them? 
+        // User wants them "above".
+        // They are z-index 1. Content is z-index 2.
+        // Actually, if we track the anchor, the fixed layer sits BEHIND the content text?
+        // We might need to ensure the Fixed Layer is z-index compatible.
+        // The user said: "and stands ABOVE it [the content? or above the headline?]".
+        // "sodass dieser darüber scrollt" -> "so that it [the text?] scrolls over it [the logo]?"
+        // "hinter den Text" (Previous prompt) -> Logo behind Text.
+        // "darüber steht" (This prompt) -> Stands above? 
+        // "darüber scrollt" usually means "scrolls over".
+        // Let's assume standard behavior: Logo is background, Text is foreground.
+
+        // Header Sync
         if (logoStart && logoEnd) {
             let progress = scrolled / animationEndPoint;
             progress = Math.max(0, Math.min(progress, 1));
@@ -126,9 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             logoEnd.style.opacity = progress;
         }
 
-        // Apply Transforms to BOTH
-        // moveX is %, moveY is px
-        // Note: translateY uses the PIXEL value now to keep it absolute
+        // Apply
         const transformString = `translate(${moveX}%, ${moveY}px) rotate(0deg) scale(${scale})`;
 
         bgLogo.style.transform = transformString;
@@ -140,15 +161,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Run on Scroll
     window.addEventListener('scroll', updateLogoState);
+    window.addEventListener('resize', updateLogoState); // Handle resize
     updateLogoState();
 
-    // IntersectionObserver for Reveal Animations
+    // IntersectionObserver (Existing)
     const observerOptions = { threshold: 0.1 };
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('in-view');
-            }
+            if (entry.isIntersecting) entry.target.classList.add('in-view');
         });
     }, observerOptions);
 
@@ -160,11 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const style = document.createElement('style');
-    style.innerHTML = `
-        .in-view {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
-    `;
+    style.innerHTML = `.in-view { opacity: 1 !important; transform: translateY(0) !important; }`;
     document.head.appendChild(style);
 });
