@@ -142,12 +142,21 @@ input:focus {
     top: 50%;
     left: 50%;
     width: 60vw;
-    /* Reset to base size */
+    /* Base size Desktop */
     opacity: 1;
     /* FULL VISIBILITY to avoid 'dark' look */
     transform-origin: center center;
     transform: translate(-50%, -50%) rotate(0deg) scale(8);
     /* Initial state overridden by JS */
+}
+
+/* Static Anchor Logo (Invisible but defines size/position) */
+#static-logo {
+    width: 60vw;
+    max-width: 800px;
+    height: auto;
+    opacity: 0;
+    margin-bottom: 2rem;
 }
 
 .container {
@@ -493,6 +502,13 @@ animation: drift 10s infinite alternate ease-in-out;
     .header {
         top: 1.5rem;
         left: 1.5rem;
+    }
+
+    /* Reduce Background Logo size on mobile */
+    .bg-logo-img,
+    #static-logo {
+        width: 45vw;
+        /* Smaller on mobile (was 60vw) */
     }
 }
 
