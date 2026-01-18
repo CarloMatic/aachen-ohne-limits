@@ -111,7 +111,8 @@ input {
     transition: border-color 0.3s;
 }
 
-input:focus {
+input:focus,
+textarea:focus {
     border-color: var(--color-purple);
     background: #fff;
 }
