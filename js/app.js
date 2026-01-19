@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Shift Y: Mark Center (~53) vs Logo Center (61) => -8 units relative to 122 => Small correction ~ -1.1vw
 
         const AC_SCALE_RATIO = 0.3043;
-        const AC_OFFSET_X_PERCENT = -4.0;
+        const AC_OFFSET_X_PERCENT = -8.0;
 
         // Convert VW offset to px for Y
         const vwInPx = window.innerWidth / 100;
