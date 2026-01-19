@@ -154,6 +154,7 @@ textarea:focus {
     top: 50%;
     left: 50%;
     width: 60vw;
+    max-width: 640px;
     /* Reset to base size */
     opacity: 1;
     /* FULL VISIBILITY to avoid 'dark' look */
