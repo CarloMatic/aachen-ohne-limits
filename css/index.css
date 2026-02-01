@@ -614,6 +614,8 @@ h3 {
     /* White text */
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
+    text-align: right;
+    /* Explicitly override type-copy's left align */
 }
 
 /* Mobile Split Layout Override */
@@ -639,6 +641,8 @@ h3 {
 
     .list-item-text {
         font-size: 1.1rem;
+        text-align: center;
+        /* Center on mobile */
     }
 }
 
