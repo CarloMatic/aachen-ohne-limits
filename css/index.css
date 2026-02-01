@@ -355,54 +355,84 @@ h3 {
     }
 }
 
-/* Footer */
-.footer {
-    background-color: #1a1a1a;
-    /* Dark Gray */
-    padding: 3rem 0;
-    margin-top: 0;
-    border-top: 1px solid #333;
+/* List Module (Section 4) */
+.list-module {
+    text-align: left;
+    max-width: 1000px;
+    /* Increased max-width to accommodate larger text */
+    margin: 4rem auto;
 }
 
-.footer-content {
+.list-item {
+    font-size: 3.5rem;
+    /* Increased from 2rem */
+    font-weight: 900;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2rem 0;
+    /* Increased padding */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
 }
 
-.footer p {
-    color: var(--color-white);
-    font-size: 0.9rem;
-}
-
-.footer-links a {
-    color: #888;
-    /* Match footer text */
-    text-decoration: underline;
-    /* Specific request */
+.list-item span:last-child {
+    color: var(--color-green);
+    font-size: 2rem;
+    /* Increased from 1.5rem */
     margin-left: 2rem;
-    font-size: 0.9rem;
-    transition: color 0.2s;
 }
 
-.footer-links a:hover {
-    color: var(--color-purple);
+/* Checklist Module (Section 6) */
+.checklist-module {
+    text-align: left;
+    max-width: 600px;
+    margin: 3rem auto;
+    font-size: 1.2rem;
 }
 
+.checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    color: #ccc;
+}
+
+.check-icon {
+    color: var(--color-green);
+    font-weight: bold;
+}
+
+/* Text Highlights */
+.highlight-text-block {
+    font-size: 1.8rem;
+    line-height: 1.4;
+    max-width: 900px;
+    margin: 0 auto;
+    font-weight: 700;
+}
+
+/* Responsive adjustments for new modules */
 @media (max-width: 600px) {
-    .footer-content {
+    .list-item {
+        font-size: 1.8rem;
+        /* Increased from 1.2rem */
         flex-direction: column;
-        text-align: center;
+        align-items: flex-start;
+        gap: 0.5rem;
     }
 
-    .footer-links a {
-        margin: 0 1rem;
+    .list-item span:last-child {
+        font-size: 1.2rem;
+        /* Increased from 1rem */
+        margin-left: 0;
+    }
+
+    .highlight-text-block {
+        font-size: 1.4rem;
     }
 }
-
-
 
 @keyframes drift {
     from {
