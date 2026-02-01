@@ -358,12 +358,13 @@ h3 {
 /* List Module (Section 4) */
 .list-module {
     text-align: left;
-    max-width: 900px;
+    max-width: 1000px;
     margin: 4rem auto;
 }
 
 .list-item {
-    font-size: 2.5rem;
+    font-size: 2rem;
+    /* Reduced from 2.5rem to ensure single line */
     font-weight: 900;
     text-transform: uppercase;
     border-bottom: none;
