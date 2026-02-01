@@ -21,40 +21,50 @@ html {
 }
 
 body {
-    background-color: var(--color-black);
-    color: var(--color-white);
+    background-color: var(--color-white);
+    color: var(--color-black);
     font-family: var(--font-primary);
     overflow-x: hidden;
     position: relative;
-    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.95);
     transition: background-color 0.8s ease, color 0.8s ease;
 }
 
-/* Light Mode (Toggled via JS) */
-body.light-mode {
-    background-color: var(--color-white);
-    color: var(--color-black);
-    text-shadow: none;
+/* Dark Mode (Section 2 onwards) */
+body.dark-mode {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.95);
 }
 
-body.light-mode h3,
-body.light-mode p,
-body.light-mode label {
-    color: var(--color-black);
+body.dark-mode h3,
+body.dark-mode p,
+body.dark-mode label {
+    color: var(--color-white);
 }
 
-body.light-mode .contact-intro img,
-body.light-mode .header img {
+/* Logo filtering */
+/* Default: Black Logos on White BG */
+.header img,
+.bg-logo-img {
     filter: brightness(0);
-    /* Turn logos black */
-    filter: brightness(0);
-    /* Turn logos black */
     transition: filter 0.5s ease;
 }
 
-/* Force footer text to stay white even in light mode */
-body.light-mode .footer p {
-    color: var(--color-white);
+/* Dark Mode: White Logos on Black BG */
+body.dark-mode .header img,
+body.dark-mode .bg-logo-img {
+    filter: brightness(0) invert(1);
+    /* Invert black to white */
+}
+
+/* Contact Section Override (Back to White/Black?) */
+/* User didn't specify, but usually footer is light. */
+/* Existing logic had 'light-mode' for contact. */
+/* If we remove dark-mode, it goes back to default (White). */
+
+/* Force footer text to stay gray */
+body .footer p {
+    color: #888 !important;
 }
 
 /* ... existing styles ... */
@@ -290,13 +300,15 @@ h3 {
 
 /* --- Standardized Typography System --- */
 .type-headline {
+    font-family: var(--font-primary);
     font-size: 4rem;
+    line-height: 1;
     font-weight: 900;
     text-transform: uppercase;
-    line-height: 1.1;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    /* Headlines remain centered by default */
+    color: inherit;
+    /* Allow theme to control color */
+    margin-bottom: 2rem;
+    letter-spacing: -0.02em;
 }
 
 .hero-headline {
@@ -306,9 +318,14 @@ h3 {
     line-height: 1;
     font-weight: 900;
     text-transform: uppercase;
-    color: var(--color-white);
+    color: inherit;
     margin-bottom: 2rem;
     letter-spacing: -0.02em;
+}
+
+/* Explicit overrides if needed */
+body.dark-mode .type-headline {
+    color: var(--color-white);
 }
 
 .type-subline {

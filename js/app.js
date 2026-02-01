@@ -75,17 +75,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // --- LIGHT MODE TOGGLE ---
-        if (contactSection) {
-            const contactTop = contactSection.offsetTop;
-            const breakPointLightMode = contactTop - (viewportHeight * 0.8);
-            if (scrolled >= breakPointLightMode) {
-                document.body.classList.add('light-mode');
+        // --- THEME LOGIC (White -> Black -> White) ---
+        // Section 1 (Hero): White (Default)
+        // Section 2..N: Black (Dark Mode)
+        // Section 7 (Contact): White (Default)
+
+        const section2 = document.getElementById('chapter-why-now');
+        // const contactSection = document.querySelector('.contact-section'); // Already defined above
+
+        if (section2) {
+            // Trigger Dark Mode slightly before Section 2 starts coming into view?
+            // Or when it hits a certain point. User said "Ab der zweiten" (From the second one).
+            // Let's say when Section 2 crosses 60% viewport or top.
+            const s2Trigger = section2.offsetTop - (viewportHeight * 0.5);
+
+            let contactTrigger = 999999;
+            if (contactSection) {
+                contactTrigger = contactSection.offsetTop - (viewportHeight * 0.8);
+            }
+
+            if (scrolled >= s2Trigger && scrolled < contactTrigger) {
+                document.body.classList.add('dark-mode');
             } else {
-                document.body.classList.remove('light-mode');
+                document.body.classList.remove('dark-mode');
             }
         }
-
         // --- HEADER LOGIC ---
         // Keep header simple for now: fade out "Start" and fade in "End" based on scroll?
         const logoStart = document.getElementById('logoStart');
