@@ -62,9 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // we need to account for that.
             // Let's handle the positioning purely via transform.
             // A simple approach: 
-            // Start X: 120vw
-            // End X: -120vw
-            const startX = 120; // vw
+            // Start X: 100vw (Shifted 20% left from 120)
+            const startX = 100; // vw
             const endX = -120; // vw
 
             const currentX = startX + ((endX - startX) * scrollProgress);
