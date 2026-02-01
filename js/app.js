@@ -55,7 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 endX = -1000; // Tablet: Balanced push (between -800 and -1200)
             }
 
-            const currentX = startX + ((endX - startX) * scrollProgress);
+            // Apply Cubic Easing (accelerating) to keep it on screen longer initially
+            // Linear movement over such a large distance (-1000vw) makes it disappear too early.
+            // Cubed easing starts slow (keeping it visible) and accelerates rapidly at the end.
+            const easedProgress = Math.pow(scrollProgress, 3);
+
+            const currentX = startX + ((endX - startX) * easedProgress);
 
             bgLogo.style.transform = `translate(${currentX}vw, -50%)`;
 
