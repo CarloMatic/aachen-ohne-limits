@@ -206,6 +206,7 @@ function updateLogoState() {
         // Interpolate Scale: 8 -> (1 * 0.3043)
         const targetScale = MIN_SCALE * AC_SCALE_RATIO;
         acScale = HERO_SCALE - ((HERO_SCALE - targetScale) * eased);
+        acScale = Math.max(acScale, minAllowedAcScale); // Apply freeze limit to AC Mark
 
         // Interpolate X: -110 -> (-50 + -34.78)
         const targetX = END_X + AC_OFFSET_X_PERCENT;
@@ -217,7 +218,7 @@ function updateLogoState() {
 
     } else {
         // LOCKED
-        acScale = MIN_SCALE * AC_SCALE_RATIO;
+        acScale = Math.max(MIN_SCALE * AC_SCALE_RATIO, minAllowedAcScale);
         acMoveX = END_X + AC_OFFSET_X_PERCENT;
         acMoveY = currentTrackingY + AC_OFFSET_Y_PX;
     }
