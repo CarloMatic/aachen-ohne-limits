@@ -321,6 +321,47 @@ h3 {
     /* Explicitly left-aligned as requested */
 }
 
+/* Global Overflow Fix */
+html,
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Hide Header Logos */
+.header-logo,
+#logoStart,
+#logoEnd {
+    display: none !important;
+}
+
+/* Footer (Gray) */
+.footer {
+    background-color: #fff;
+    color: #666;
+    /* Gray text */
+    border-top: 1px solid #eee;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+    /* Gray text */
+}
+
+.footer a {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
 .type-cta {
     display: inline-block;
     font-size: 1rem;
