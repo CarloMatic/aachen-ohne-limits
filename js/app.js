@@ -46,10 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // "Right out of picture" to "Left out of picture"
             const startX = 60; // vw
 
-            // On mobile/tablet, keeping 180vh height makes the logo extremely wide.
-            // We need a much stronger push to get it off screen.
-            const isMobile = window.innerWidth <= 1024; // Expanded to include tablets
-            const endX = isMobile ? -850 : -270; // vw (Shifted further left by user request)
+            // Responsive Exit Positions
+            let endX = -270; // Desktop default
+
+            if (window.innerWidth < 768) {
+                endX = -850; // Mobile: Aggressive push
+            } else if (window.innerWidth <= 1024) {
+                endX = -500; // Tablet: Moderate push (User said -850 was too early)
+            }
 
             const currentX = startX + ((endX - startX) * scrollProgress);
 

@@ -589,12 +589,20 @@ body {
 /* Responsive Narrative */
 @media (max-width: 768px) {
     .narrative-headline {
-        font-size: 2.5rem;
+        font-size: 2rem;
+        /* Reduced from 2.5rem */
+        line-height: 1.2;
+    }
+
+    .narrative-text {
+        font-size: 1.1rem;
+        /* Slightly smaller copy */
     }
 
     .split-layout {
         grid-template-columns: 1fr;
     }
+
 
     .shape-barrier {
         height: 200px;
