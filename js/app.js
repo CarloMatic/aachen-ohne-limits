@@ -61,10 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Note: Since we centered it with top:50%/left:50% and typical translate(-50%, -50%), 
             // we need to account for that.
             // Let's handle the positioning purely via transform.
-            // A simple approach: 
-            // Start X: 60vw (Shifted another 20% left from 80)
+            // "Right out of picture" to "Left out of picture"
+            // Start: 60vw (Adjusted as requested)
             const startX = 60; // vw
-            const endX = -120; // vw
+            const endX = -250; // vw
 
             const currentX = startX + ((endX - startX) * scrollProgress);
 
