@@ -287,6 +287,67 @@ h3 {
     opacity: 0.8;
 }
 
+/* --- Standardized Typography System --- */
+.type-headline {
+    font-size: 4rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+}
+
+.type-subline {
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-purple);
+    margin-bottom: 1rem;
+}
+
+.type-copy {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    font-weight: 300;
+    color: #ccc;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.type-cta {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-white);
+    text-decoration: none;
+    border-bottom: 2px solid var(--color-green);
+    padding-bottom: 0.2rem;
+    transition: color 0.3s, border-color 0.3s;
+    cursor: pointer;
+}
+
+.type-cta:hover {
+    color: var(--color-green);
+    border-color: var(--color-purple);
+}
+
+/* Mobile Typography Adjustments */
+@media (max-width: 768px) {
+    .type-headline {
+        font-size: 2.5rem;
+    }
+
+    .type-subline {
+        font-size: 1.5rem;
+    }
+
+    .type-copy {
+        font-size: 1.2rem;
+    }
+}
+
 /* Footer */
 .footer {
     background-color: #1a1a1a;
