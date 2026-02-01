@@ -3,22 +3,23 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Aachen ohne Limits - Loaded');
 
     // DOM Elements
-    const bgLogoFull = document.getElementById('bgLogoFull');
-    const bgLogo = document.getElementById('bgLogo'); // Hide this
+    const bgLogoFull = document.getElementById('bgLogoFull'); // Hide this
+    const bgLogo = document.getElementById('bgLogo'); // Animate this one (ac.svg)
     const header = document.querySelector('.header');
 
     // Config
     const LOGO_HEIGHT_VH = 150; // 150% of viewport height
 
     // Initial Setup
-    if (bgLogo) bgLogo.style.display = 'none';
-    if (bgLogoFull) {
-        bgLogoFull.style.opacity = '1';
-        bgLogoFull.style.height = `${LOGO_HEIGHT_VH}vh`;
-        bgLogoFull.style.width = 'auto';
-        bgLogoFull.style.position = 'fixed';
-        bgLogoFull.style.top = '50%';
-        bgLogoFull.style.left = '50%';
+    if (bgLogoFull) bgLogoFull.style.display = 'none';
+    if (bgLogo) {
+        bgLogo.style.opacity = '1';
+        bgLogo.style.display = 'block';
+        bgLogo.style.height = `${LOGO_HEIGHT_VH}vh`;
+        bgLogo.style.width = 'auto';
+        bgLogo.style.position = 'fixed';
+        bgLogo.style.top = '50%';
+        bgLogo.style.left = '50%';
         // We will animate separate transform, so set base here if needed, 
         // but typically we overwrite transform in the loop.
     }
@@ -32,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const scrollProgress = Math.max(0, Math.min(scrolled / fullHeight, 1));
 
         // --- BACKGROUND LOGO ANIMATION ---
-        if (bgLogoFull) {
+        if (bgLogo) {
             // "Right out of picture" to "Left out of picture"
             // Start: 100vw (Right edge) + Buffer
             // End: -100vw (Left edge) - Buffer? 
@@ -59,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Simpler: Just map X.
             // transform: translate(currentXvw, -50%) 
 
-            bgLogoFull.style.transform = `translate(${currentX}vw, -50%)`;
+            bgLogo.style.transform = `translate(${currentX}vw, -50%)`;
         }
 
         // --- LIGHT MODE TOGGLE ---
