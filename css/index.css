@@ -522,9 +522,10 @@ h3 {
 .split-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: flex-start;
-    /* Changed from center to allow offset positioning */
+    gap: 0;
+    /* Reduced from 4rem to bring columns closer */
+    align-items: center;
+    /* Vertically centered */
 }
 
 
@@ -606,7 +607,8 @@ h3 {
 
 .split-col-left {
     text-align: left;
-    padding-left: 2rem;
+    padding-left: 1rem;
+    /* Reduced from 2rem to 1rem to get closer to line */
 }
 
 .list-item-text {
