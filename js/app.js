@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.innerWidth < 768) {
                 endX = -850; // Mobile: Aggressive push
             } else if (window.innerWidth <= 1366) { // Expanded definition to catch iPad Pro 12.9" and small laptops
-                endX = -1200; // Tablet/Small Laptop: Very aggressive push
+                endX = -1000; // Tablet: Balanced push (between -800 and -1200)
             }
 
             const currentX = startX + ((endX - startX) * scrollProgress);
@@ -60,7 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
             bgLogo.style.transform = `translate(${currentX}vw, -50%)`;
 
             // Safety: Ensure it vanishes before white section regardless of width
-            if (scrollProgress >= 0.95) {
+            // Delayed fade to 0.98 to avoid premature disappearance if animation speed is good
+            if (scrollProgress >= 0.98) {
                 bgLogo.style.opacity = '0';
                 bgLogo.style.transition = 'opacity 0.2s';
             } else {
