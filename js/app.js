@@ -27,10 +27,26 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateAnimation() {
         const scrolled = window.scrollY;
         const viewportHeight = window.innerHeight;
-        const fullHeight = document.documentElement.scrollHeight - viewportHeight;
+        // const fullHeight = document.documentElement.scrollHeight - viewportHeight; // No longer used for this
 
-        // 0 to 1 progress
-        const scrollProgress = Math.max(0, Math.min(scrolled / fullHeight, 1));
+        // Determine Animation End Point (Start of White Section)
+        const contactSection = document.querySelector('.contact-section');
+        let animationEndScroll = document.documentElement.scrollHeight - viewportHeight; // Fallback
+
+        if (contactSection) {
+            // End animation slightly before the white section starts fully
+            // The white section triggers 'light-mode' at breakPointLightMode. 
+            // Let's us that or the actual top.
+            animationEndScroll = contactSection.offsetTop - viewportHeight;
+            // This means when the contact section enters the viewport bottom, animation is done.
+            // Or maybe when it hits top? "bevor der weiße hintergrund kommt" implies 
+            // before the background turns white.
+            // The background turns white at 'breakPointLightMode' (contactTop - 80vh).
+            animationEndScroll = contactSection.offsetTop - (viewportHeight * 0.8);
+        }
+
+        // 0 to 1 progress relative to the Dark Zone
+        const scrollProgress = Math.max(0, Math.min(scrolled / animationEndScroll, 1));
 
         // --- BACKGROUND LOGO ANIMATION ---
         if (bgLogo) {
@@ -64,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // --- LIGHT MODE TOGGLE ---
-        const contactSection = document.querySelector('.contact-section');
+        // const contactSection = document.querySelector('.contact-section'); // Moved up
         if (contactSection) {
             const contactTop = contactSection.offsetTop;
             const breakPointLightMode = contactTop - (viewportHeight * 0.8);
