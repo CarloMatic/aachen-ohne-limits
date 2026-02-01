@@ -595,6 +595,52 @@ h3 {
     z-index: 2;
 }
 
+/* Split Layout Classes */
+.split-col-right {
+    text-align: right;
+    border-right: 1px solid #666;
+    /* Made slightly lighter to ensure visibility */
+    padding-right: 2rem;
+}
+
+.split-col-left {
+    text-align: left;
+    padding-left: 2rem;
+}
+
+.list-item-text {
+    color: #fff;
+    /* White text */
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Mobile Split Layout Override */
+@media (max-width: 768px) {
+    .split-layout {
+        grid-template-columns: 1fr;
+        /* Ensure stack */
+    }
+
+    .split-col-right {
+        text-align: center;
+        border-right: none;
+        padding-right: 0;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #333;
+    }
+
+    .split-col-left {
+        text-align: center;
+        padding-left: 0;
+    }
+
+    .list-item-text {
+        font-size: 1.1rem;
+    }
+}
+
 .contact-section h3,
 .contact-section p,
 .contact-section label {
