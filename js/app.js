@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.innerWidth < 768) {
                 endX = -850; // Mobile: Aggressive push
             } else if (window.innerWidth <= 1024) {
-                endX = -700; // Tablet: Optimized push (Sweet spot between -500 and -850)
+                endX = -800; // Tablet: Increase push (User said -700 was still visible)
             }
 
             const currentX = startX + ((endX - startX) * scrollProgress);
