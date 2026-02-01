@@ -2,276 +2,107 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log('Aachen ohne Limits - Loaded');
 
-    // Fixed Background Layers
-    const bgLogo = document.getElementById('bgLogo');
+    // DOM Elements
     const bgLogoFull = document.getElementById('bgLogoFull');
+    const bgLogo = document.getElementById('bgLogo'); // Hide this
+    const header = document.querySelector('.header');
 
-    // The Content Anchor (Invisible placeholder)
-    const staticLogo = document.getElementById('static-logo');
+    // Config
+    const LOGO_HEIGHT_VH = 150; // 150% of viewport height
 
-    // Header Logos
-    const logoStart = document.getElementById('logoStart');
-    const logoEnd = document.getElementById('logoEnd');
+    // Initial Setup
+    if (bgLogo) bgLogo.style.display = 'none';
+    if (bgLogoFull) {
+        bgLogoFull.style.opacity = '1';
+        bgLogoFull.style.height = `${LOGO_HEIGHT_VH}vh`;
+        bgLogoFull.style.width = 'auto';
+        bgLogoFull.style.position = 'fixed';
+        bgLogoFull.style.top = '50%';
+        bgLogoFull.style.left = '50%';
+        // We will animate separate transform, so set base here if needed, 
+        // but typically we overwrite transform in the loop.
+    }
 
-    // Config values
-    const HERO_SCALE = 8;     // Start at 800%
-    const MIN_SCALE = 1.5;    // Start User Request: 150% minimum
-    const START_X = 50;       // Start from Right (adjusted to not be too far if scale is huge)
-    const END_X = -150;       // End Off-Screen Left
-
-    function updateLogoState() {
-        if (!bgLogo || !bgLogoFull || !staticLogo) return;
-
+    function updateAnimation() {
         const scrolled = window.scrollY;
         const viewportHeight = window.innerHeight;
-        const isMobile = window.innerWidth < 768;
+        const fullHeight = document.documentElement.scrollHeight - viewportHeight;
 
-        // Responsive Offset
-        // Desktop: Lift significantly (-180px) to clear headline
-        // Mobile: Lift less (-60px) to keep it tight
-        const OFFSET_Y = isMobile ? -60 : -180;
+        // 0 to 1 progress
+        const scrollProgress = Math.max(0, Math.min(scrolled / fullHeight, 1));
 
-        // --- CORE CALCULATIONS for CONTINUITY ---
+        // --- BACKGROUND LOGO ANIMATION ---
+        if (bgLogoFull) {
+            // "Right out of picture" to "Left out of picture"
+            // Start: 100vw (Right edge) + Buffer
+            // End: -100vw (Left edge) - Buffer? 
+            // Better: use explicit VW units to drive it across.
 
-        // 1. Where is the Anchor physically located on the full page document?
-        const staticRect = staticLogo.getBoundingClientRect();
-        const staticAbsoluteTop = staticRect.top + scrolled;
-        const staticHeight = staticRect.height;
+            // Let's go from +100vw to -100vw relative to CENTER.
+            // Center is 0. 
+            // Start: TranslateX(100vw) -> moves it to the right. 
+            // Note: Since we centered it with top:50%/left:50% and typical translate(-50%, -50%), 
+            // we need to account for that.
+            // Let's handle the positioning purely via transform.
+            // A simple approach: 
+            // Start X: 120vw
+            // End X: -120vw
+            const startX = 120; // vw
+            const endX = -120; // vw
 
-        // 2. Where is it currently relative to the viewport center?
-        const staticCenterY = staticRect.top + (staticHeight / 2);
-        const viewportCenterY = viewportHeight / 2;
+            const currentX = startX + ((endX - startX) * scrollProgress);
 
-        // Phase 2 Target Y: The anchor's distance from center + our manual lift
-        const currentTrackingY = (staticCenterY - viewportCenterY) + OFFSET_Y;
+            // Maintain vertical center (-50%) and scale if needed (already set via height)
+            // We need translate(-50%, -50%) for centering usually, but here we are moving X.
+            // If we use left: 50%, then translate(-50%, ...) centers it.
+            // So translate(currentX - 50, -50%) ??
+            // Simpler: Just map X.
+            // transform: translate(currentXvw, -50%) 
 
-        // 3. Define the Lock Point (Animation End Point)
-        // This is the SCROLL POSITION where 'staticCenterY' equals 'viewportCenterY'.
-        const lockScrollPos = staticAbsoluteTop + (staticHeight / 2) - (viewportCenterY);
+            bgLogoFull.style.transform = `translate(${currentX}vw, -50%)`;
+        }
 
-        // Ensure we don't lock before the page even allows (e.g. if it's at top)
-        let animationEndPoint = lockScrollPos;
-        if (animationEndPoint < viewportHeight) animationEndPoint = viewportHeight;
-
-        // --- OTHER TRIGGERS ---
-
-        // Crossfade
-        const mindsetSection = document.getElementById('section-mindset');
-        const mindsetTop = mindsetSection ? mindsetSection.offsetTop : viewportHeight;
-
-        // Start fading earlier? 
-        const fadeStartPoint = mindsetTop - (viewportHeight * 0.5);
-        const fadeEndPoint = animationEndPoint;
-
-        // Light Mode
+        // --- LIGHT MODE TOGGLE ---
         const contactSection = document.querySelector('.contact-section');
-        const contactTop = contactSection ? contactSection.offsetTop : 99999;
-        const breakPointLightMode = contactTop - (viewportHeight * 0.8);
-
-        // --- APPLY LOGIC ---
-
-        if (scrolled >= breakPointLightMode) {
-            document.body.classList.add('light-mode');
-        } else {
-            document.body.classList.remove('light-mode');
-        }
-
-        let scale = HERO_SCALE;
-        let moveX = START_X;
-        let moveY = 0;
-
-        // Limit shrinkage based on specific trigger element
-        const freezeTrigger = document.getElementById('logo-freeze-trigger');
-        let minAllowedScale = MIN_SCALE;
-        let minAllowedAcScale = MIN_SCALE * AC_SCALE_RATIO; // Default min for AC Mark
-
-        if (freezeTrigger) {
-            const triggerRect = freezeTrigger.getBoundingClientRect();
-            const triggerAbsoluteTop = triggerRect.top + scrolled;
-
-            // Use element's visual center or top as the freeze line
-            const freezeScrollPos = triggerAbsoluteTop - (viewportHeight * 0.5);
-
-            if (freezeScrollPos < animationEndPoint) {
-                const freezeProgress = Math.max(0, Math.min(freezeScrollPos / animationEndPoint, 1));
-                const freezeEased = 1 - Math.pow(1 - freezeProgress, 3);
-
-                // Calculate frozen Full Scale
-                const scaleAtFreeze = HERO_SCALE - ((HERO_SCALE - MIN_SCALE) * freezeEased);
-                minAllowedScale = scaleAtFreeze;
-
-                // Calculate frozen AC Mark Scale
-                const targetAcScale = MIN_SCALE * AC_SCALE_RATIO;
-                const acScaleAtFreeze = HERO_SCALE - ((HERO_SCALE - targetAcScale) * freezeEased);
-                minAllowedAcScale = acScaleAtFreeze;
+        if (contactSection) {
+            const contactTop = contactSection.offsetTop;
+            const breakPointLightMode = contactTop - (viewportHeight * 0.8);
+            if (scrolled >= breakPointLightMode) {
+                document.body.classList.add('light-mode');
+            } else {
+                document.body.classList.remove('light-mode');
             }
         }
 
-        if (scrolled < animationEndPoint) {
-            // PHASE 1: ZOOM IN
-            let progress = scrolled / animationEndPoint;
-            // progress = Math.max(0, Math.min(progress, 1));
-            // Let's allow it to slightly overshoot if needed for continuity?
-            // Actually, for the interpolation math to match tracking Y exactly at the handoff, 
-            // we need exact 0-1 range relative to lock point.
-            progress = Math.max(0, Math.min(progress, 1));
-
-            const eased = 1 - Math.pow(1 - progress, 3); // Cubic Out
-
-            scale = HERO_SCALE - ((HERO_SCALE - MIN_SCALE) * eased);
-            scale = Math.max(scale, minAllowedScale); // Apply the freeze limit
-
-            moveX = START_X + ((END_X - START_X) * eased);
-
-            // Y INTERPOLATION
-            // Start: 0 (Visual Center)
-            // End: OFFSET_Y
-            // Mathematically: At progress=1 (scrolled=lockScrollPos), 
-            // currentTrackingY = (0) + OFFSET_Y = OFFSET_Y.
-            // So if we interpolate to OFFSET_Y, the handoff is seamless.
-            moveY = OFFSET_Y * eased;
-
-        } else {
-            // PHASE 2: LOCKED TRACKING
-            // User wants it to NOT get smaller than minAllowedScale.
-            // But normally here it is MIN_SCALE (1).
-            // If minAllowedScale is 4, we must stay at 4.
-            scale = Math.max(MIN_SCALE, minAllowedScale);
-
-            moveX = END_X;
-
-            // Directly follow the anchor
-            moveY = currentTrackingY;
-        }
-
-        // --- CROSSFADE ---
-        let logoOpacity = 1;
-        let fullLogoOpacity = 0;
-
-        if (scrolled >= fadeStartPoint) {
-            let fadeProgress = (scrolled - fadeStartPoint) / (fadeEndPoint - fadeStartPoint);
-            fadeProgress = Math.max(0, Math.min(fadeProgress, 1));
-
-            logoOpacity = 1 - fadeProgress;
-            fullLogoOpacity = fadeProgress;
-        }
-
-        // Header Sync
+        // --- HEADER LOGIC ---
+        // Keep header simple for now: fade out "Start" and fade in "End" based on scroll?
+        // Or keep previous logic? Previous logic synced with overall progress.
+        // Let's just fade nicely over the first section.
+        const logoStart = document.getElementById('logoStart');
+        const logoEnd = document.getElementById('logoEnd');
         if (logoStart && logoEnd) {
-            let progress = scrolled / animationEndPoint;
-            progress = Math.max(0, Math.min(progress, 1));
-            logoStart.style.opacity = Math.max(0, 1 - (progress * 3));
-            logoEnd.style.opacity = progress;
+            const headerProgress = Math.min(scrolled / (viewportHeight * 0.5), 1);
+            logoStart.style.opacity = 1 - headerProgress;
+            logoEnd.style.opacity = headerProgress;
         }
 
-        // Apply
-        // We need distinct transforms for the Background Mark (bgLogo) and the Full Logo (bgLogoFull)
-        // because the 'Mark' is only a small part (~30%) of the 'Full Logo'.
-
-        // RATIOS calculated from SVG viewBoxes:
-        // Full Logo Width: 414 | Mark Width: 126 => Ratio: 0.3043
-        // Shift X: Mark Center (63) vs Logo Center (207) => -144 units relative to 414 => -34.78%
-        // Shift Y: Mark Center (~53) vs Logo Center (61) => -8 units relative to 122 => Small correction ~ -1.1vw
-
-        const AC_SCALE_RATIO = 0.3043;
-        const AC_OFFSET_X_PERCENT = -8.0;
-
-        // Convert VW offset to px for Y
-        const vwInPx = window.innerWidth / 100;
-        // -1.1vw rough estimate of vertical shift
-        const AC_OFFSET_Y_PX = -1.1 * vwInPx;
-
-        // 1. Transform for FULL LOGO (The anchor)
-        // It follows the standard calculated path (Scale 1, Center -50%)
-        const transformFull = `translate(${moveX}%, ${moveY}px) rotate(0deg) scale(${scale})`;
-        bgLogoFull.style.transform = transformFull;
-        bgLogoFull.style.opacity = fullLogoOpacity;
-
-        // 2. Transform for AC MARK (The morphing element)
-        // It needs to interpolate from its Big State (Hero) to the 'Mark Position' inside the Full Logo.
-
-        // We explicitly calculate its own scale/move based on progress to ensure smooth transition
-        let acScale, acMoveX, acMoveY;
-
-        if (scrolled < animationEndPoint) {
-            // STILL ANIMATING
-            // We want it to START similar to before (Scale 8, X -110)
-            // But END at the corrective target (Scale 1*Ratio, X -50+Offset)
-
-            const progress = Math.max(0, Math.min(scrolled / animationEndPoint, 1));
-            const eased = 1 - Math.pow(1 - progress, 3);
-
-            // Interpolate Scale: 8 -> (1 * 0.3043)
-            const targetScale = MIN_SCALE * AC_SCALE_RATIO;
-            acScale = HERO_SCALE - ((HERO_SCALE - targetScale) * eased);
-            acScale = Math.max(acScale, minAllowedAcScale); // Apply freeze limit to AC Mark
-
-            // Interpolate X: -110 -> (-50 + -34.78)
-            const targetX = END_X + AC_OFFSET_X_PERCENT;
-            acMoveX = START_X + ((targetX - START_X) * eased);
-
-            // Interpolate Y: 0 -> (OFFSET_Y + AC_OFFSET_Y_PX)
-            const targetY = OFFSET_Y + AC_OFFSET_Y_PX;
-            acMoveY = targetY * eased;
-
-        } else {
-            // LOCKED
-            acScale = Math.max(MIN_SCALE * AC_SCALE_RATIO, minAllowedAcScale);
-            acMoveX = END_X + AC_OFFSET_X_PERCENT;
-            acMoveY = currentTrackingY + AC_OFFSET_Y_PX;
-        }
-
-        const transformAC = `translate(${acMoveX}%, ${acMoveY}px) rotate(0deg) scale(${acScale})`;
-        bgLogo.style.transform = transformAC;
-        bgLogo.style.opacity = logoOpacity;
-
-        // Final Header Visibility Logic
-        // 1. Mobile/Tablet: Hide during Mindset -> Supporters
-        // 2. GLOBAL: Hide in White Area (Light Mode) - requested by user to be empty
-        // 3. Elsevier: Visible
-
+        // Hide Header in Light Mode Area
         let headerVisible = true;
-
-        if (window.innerWidth <= 1024) {
-            // Mobile Zone Logic
-            const mindsetSection = document.getElementById('section-mindset');
-            const supportersSection = document.querySelector('.supporters-section');
-
-            if (mindsetSection && supportersSection) {
-                const mindsetRect = mindsetSection.getBoundingClientRect();
-                const supportersRect = supportersSection.getBoundingClientRect();
-
-                const enteredZone = mindsetRect.top < 300;
-                const exitedZone = supportersRect.bottom < 100;
-
-                if (enteredZone && !exitedZone) {
-                    headerVisible = false;
-                }
-            }
-        }
-
-        // Global Override for White Area (using the calculated breakpoint or class)
-        if (scrolled >= breakPointLightMode) {
+        if (document.body.classList.contains('light-mode')) {
             headerVisible = false;
         }
-
-        // Apply to Header
-        const header = document.querySelector('.header');
         if (header) {
             header.style.opacity = headerVisible ? '1' : '0';
             header.style.pointerEvents = headerVisible ? 'auto' : 'none';
         }
     }
 
-    // Load handling
-    window.addEventListener('load', updateLogoState);
-    window.addEventListener('scroll', updateLogoState);
-    window.addEventListener('resize', updateLogoState);
-
+    window.addEventListener('scroll', updateAnimation);
+    window.addEventListener('resize', updateAnimation);
     // Initial call
-    updateLogoState();
+    updateAnimation();
 
-    // IntersectionObserver
+    // Intersection Observer for Text
     const observerOptions = { threshold: 0.1 };
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
