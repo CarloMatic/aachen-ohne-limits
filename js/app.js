@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('.header');
 
     // Config
-    const LOGO_HEIGHT_VH = 150; // 150% of viewport height
+    const LOGO_HEIGHT_VH = 165; // User Request: 10% larger (150 -> 165)
 
     // Initial Setup
     if (bgLogoFull) bgLogoFull.style.display = 'none';
