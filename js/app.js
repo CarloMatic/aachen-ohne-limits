@@ -47,17 +47,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const startX = 60; // vw
 
             // Responsive Exit Positions
-            let endX = -270; // Desktop default
+            let endX = -500; // Desktop default (Increased from -270)
 
             if (window.innerWidth < 768) {
                 endX = -850; // Mobile: Aggressive push
-            } else if (window.innerWidth <= 1024) {
-                endX = -1200; // Tablet: Very aggressive push (User request)
+            } else if (window.innerWidth <= 1366) { // Expanded definition to catch iPad Pro 12.9" and small laptops
+                endX = -1200; // Tablet/Small Laptop: Very aggressive push
             }
 
             const currentX = startX + ((endX - startX) * scrollProgress);
 
             bgLogo.style.transform = `translate(${currentX}vw, -50%)`;
+
+            // Safety: Ensure it vanishes before white section regardless of width
+            if (scrollProgress >= 0.95) {
+                bgLogo.style.opacity = '0';
+                bgLogo.style.transition = 'opacity 0.2s';
+            } else {
+                bgLogo.style.opacity = '1';
+                bgLogo.style.transition = 'none'; // Instant updates during scroll (except the fade)
+            }
         }
 
         // --- LIGHT MODE TOGGLE ---
