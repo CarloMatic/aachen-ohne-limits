@@ -17,7 +17,7 @@ const logoEnd = document.getElementById('logoEnd');
 
 // Config values
 const HERO_SCALE = 8;     // Start at 800%
-const MIN_SCALE = 1;      // Final scale matching 60vw
+const MIN_SCALE = 1.5;    // Start User Request: 150% minimum
 const START_X = -110;     // Start further left
 const END_X = -50;        // Center
 
