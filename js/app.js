@@ -85,25 +85,27 @@ function updateLogoState() {
     // Limit shrinkage based on specific trigger element
     const freezeTrigger = document.getElementById('logo-freeze-trigger');
     let minAllowedScale = MIN_SCALE;
+    let minAllowedAcScale = MIN_SCALE * AC_SCALE_RATIO; // Default min for AC Mark
 
     if (freezeTrigger) {
         const triggerRect = freezeTrigger.getBoundingClientRect();
         const triggerAbsoluteTop = triggerRect.top + scrolled;
-        // We want to stop shrinking when this element enters view or is at some position?
-        // "ab der Position" implies when we scroll PAST it.
-        // Let's say when it hits the center of viewport? Or simply its top position?
-        // Let's use the element's top position relative to document as the freeze point.
 
-        // Calculate what the scale WOULD be at this trigger point
-        const freezeScrollPos = triggerAbsoluteTop - (viewportHeight * 0.5); // Center?
+        // Use element's visual center or top as the freeze line
+        const freezeScrollPos = triggerAbsoluteTop - (viewportHeight * 0.5);
 
         if (freezeScrollPos < animationEndPoint) {
             const freezeProgress = Math.max(0, Math.min(freezeScrollPos / animationEndPoint, 1));
             const freezeEased = 1 - Math.pow(1 - freezeProgress, 3);
-            const scaleAtFreeze = HERO_SCALE - ((HERO_SCALE - MIN_SCALE) * freezeEased);
 
-            // If we are past this point, don't let scale go lower than this
+            // Calculate frozen Full Scale
+            const scaleAtFreeze = HERO_SCALE - ((HERO_SCALE - MIN_SCALE) * freezeEased);
             minAllowedScale = scaleAtFreeze;
+
+            // Calculate frozen AC Mark Scale
+            const targetAcScale = MIN_SCALE * AC_SCALE_RATIO;
+            const acScaleAtFreeze = HERO_SCALE - ((HERO_SCALE - targetAcScale) * freezeEased);
+            minAllowedAcScale = acScaleAtFreeze;
         }
     }
 
