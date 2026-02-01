@@ -364,21 +364,24 @@ h3 {
 
 .list-item {
     font-size: 2.5rem;
-    /* Reduced from 3.5rem */
     font-weight: 900;
     text-transform: uppercase;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 1.5rem 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border-bottom: none;
+    /* Remove table-like border */
+    padding: 0.5rem 0;
+    /* Reduced vertical padding */
+    display: block;
+    line-height: 1.2;
 }
 
 .list-item span:last-child {
     color: var(--color-green);
-    font-size: 1.5rem;
-    /* Reduced from 2rem */
-    margin-left: 2rem;
+    font-size: inherit;
+    /* Same size as rest of sentence */
+    margin-left: 1rem;
+    /* Standard space */
+    display: inline-block;
+    /* Ensure it stays with text or wraps nicely */
 }
 
 /* Checklist Module (Section 6) */
