@@ -338,8 +338,8 @@ body {
 /* Footer (Gray) */
 .footer {
     background-color: #fff;
-    color: #888;
-    /* Gray text (lighter) */
+    color: #888 !important;
+    /* Force gray text */
     border-top: 1px solid #eee;
     padding: 2rem 0;
     text-align: center;
@@ -348,12 +348,12 @@ body {
 .footer p {
     margin: 0;
     font-size: 0.9rem;
-    color: #888;
-    /* Gray text */
+    color: #888 !important;
+    /* Force gray text */
 }
 
 .footer a {
-    color: inherit;
+    color: inherit !important;
     text-decoration: none;
     font-weight: 500;
 }
