@@ -44,17 +44,21 @@ body.dark-mode label {
 
 /* Logo filtering */
 /* Default: Black Logos on White BG */
-.header img,
-.bg-logo-img {
+.header img {
     filter: brightness(0);
     transition: filter 0.5s ease;
 }
 
 /* Dark Mode: White Logos on Black BG */
-body.dark-mode .header img,
-body.dark-mode .bg-logo-img {
+body.dark-mode .header img {
     filter: brightness(0) invert(1);
     /* Invert black to white */
+}
+
+/* AC Mark (Background Logo) - Keep original color (Purple) */
+.bg-logo-img {
+    filter: none;
+    transition: filter 0.5s ease;
 }
 
 /* Contact Section Override (Back to White/Black?) */
