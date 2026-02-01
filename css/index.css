@@ -358,19 +358,17 @@ h3 {
 /* List Module (Section 4) */
 .list-module {
     text-align: left;
-    max-width: 1000px;
-    /* Increased max-width to accommodate larger text */
+    max-width: 900px;
     margin: 4rem auto;
 }
 
 .list-item {
-    font-size: 3.5rem;
-    /* Increased from 2rem */
+    font-size: 2.5rem;
+    /* Reduced from 3.5rem */
     font-weight: 900;
     text-transform: uppercase;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 2rem 0;
-    /* Increased padding */
+    padding: 1.5rem 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -378,8 +376,8 @@ h3 {
 
 .list-item span:last-child {
     color: var(--color-green);
-    font-size: 2rem;
-    /* Increased from 1.5rem */
+    font-size: 1.5rem;
+    /* Reduced from 2rem */
     margin-left: 2rem;
 }
 
@@ -416,16 +414,15 @@ h3 {
 /* Responsive adjustments for new modules */
 @media (max-width: 600px) {
     .list-item {
-        font-size: 1.8rem;
-        /* Increased from 1.2rem */
+        font-size: 1.5rem;
+        /* Adjusted for mobile */
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
     }
 
     .list-item span:last-child {
-        font-size: 1.2rem;
-        /* Increased from 1rem */
+        font-size: 1rem;
         margin-left: 0;
     }
 
