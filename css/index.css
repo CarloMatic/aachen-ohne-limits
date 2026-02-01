@@ -287,6 +287,7 @@ h3 {
     opacity: 0.8;
 }
 
+
 /* --- Standardized Typography System --- */
 .type-headline {
     font-size: 4rem;
@@ -294,6 +295,8 @@ h3 {
     text-transform: uppercase;
     line-height: 1.1;
     margin-bottom: 1.5rem;
+    text-align: center;
+    /* Headlines remain centered by default */
 }
 
 .type-subline {
@@ -303,6 +306,8 @@ h3 {
     letter-spacing: 2px;
     color: var(--color-purple);
     margin-bottom: 1rem;
+    text-align: center;
+    /* Sublines remain centered */
 }
 
 .type-copy {
@@ -312,6 +317,8 @@ h3 {
     color: #ccc;
     max-width: 800px;
     margin: 0 auto;
+    text-align: left;
+    /* Explicitly left-aligned as requested */
 }
 
 .type-cta {
