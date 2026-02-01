@@ -44,10 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- BACKGROUND LOGO ANIMATION (Simple Flythrough) ---
         if (bgLogo) {
             // "Right out of picture" to "Left out of picture"
-            // Start: 60vw 
-            // End: -250vw
             const startX = 60; // vw
-            const endX = -250; // vw
+
+            // On mobile, keeping 180vh height makes the logo extremely wide in terms of VW units.
+            // We need a much stronger push to get it off screen.
+            const isMobile = window.innerWidth < 768;
+            const endX = isMobile ? -800 : -250; // vw
 
             const currentX = startX + ((endX - startX) * scrollProgress);
 
