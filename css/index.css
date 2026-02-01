@@ -325,6 +325,8 @@ h3 {
     color: inherit;
     margin-bottom: 2rem;
     letter-spacing: -0.02em;
+    text-shadow: none !important;
+    /* Explicitly remove shadow */
 }
 
 /* Explicit overrides if needed */
@@ -401,7 +403,8 @@ body {
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--color-white);
+    color: inherit;
+    /* Allow theme to control color */
     text-decoration: none;
     border-bottom: 2px solid var(--color-green);
     padding-bottom: 0.2rem;
@@ -412,6 +415,11 @@ body {
 .type-cta:hover {
     color: var(--color-green);
     border-color: var(--color-purple);
+}
+
+/* Explicit override for Dark Mode */
+body.dark-mode .type-cta {
+    color: var(--color-white);
 }
 
 /* Mobile Typography Adjustments */
