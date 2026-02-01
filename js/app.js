@@ -18,8 +18,8 @@ const logoEnd = document.getElementById('logoEnd');
 // Config values
 const HERO_SCALE = 8;     // Start at 800%
 const MIN_SCALE = 1.5;    // Start User Request: 150% minimum
-const START_X = -110;     // Start further left
-const END_X = -50;        // Center
+const START_X = 50;       // Start from Right (adjusted to not be too far if scale is huge)
+const END_X = -150;       // End Off-Screen Left
 
 function updateLogoState() {
     if (!bgLogo || !bgLogoFull || !staticLogo) return;
