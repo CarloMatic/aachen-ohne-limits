@@ -599,7 +599,7 @@ h3 {
 /* Split Layout Classes */
 .split-col-right {
     text-align: right;
-    border-right: 1px solid #666;
+    border-right: 1px solid #fff;
     /* Made slightly lighter to ensure visibility */
     padding-right: 1rem;
     /* Reduced from 2rem to 1rem for tighter fit */
